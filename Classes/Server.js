@@ -9,11 +9,12 @@ let GameLobbySettings = require('./Lobbies/GameLobbySettings');
 
 module.exports = class Server{
     constructor(){
-        this.database = new Database(true);
+        this.database = new Database(true); //episode 19
         this.connections = [];
         this.lobbys = [];
 
         this.lobbys[0] = new LobbyBase(0);
+        
     }
 
     onUpdate(){
