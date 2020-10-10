@@ -1,5 +1,6 @@
 let Connection = require('./Connection');
 let Player = require('./Player');
+let Database = require('./Database');
 
 //Lobbies 
 let LobbyBase = require('./Lobbies/LobbyBase');
@@ -8,6 +9,7 @@ let GameLobbySettings = require('./Lobbies/GameLobbySettings');
 
 module.exports = class Server{
     constructor(){
+        this.database = new Database(true);
         this.connections = [];
         this.lobbys = [];
 
