@@ -1,3 +1,7 @@
+//ws://127.0.0.1:3000/socket.io/?EIO=4&transport=websocket
+//ws://zth-project.herokuapp.com:80/socket.io/?EIO=4&transport=websocket
+//https://zth-project.herokuapp.com/
+
 var io = require('socket.io')(process.env.PORT || 3000);
 console.log('Server has started');
 

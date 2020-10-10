@@ -32,6 +32,8 @@ module.exports = class GameLobby extends LobbyBase{
         super.onEnterLobby(connection);
 
         lobby.addPlayer(connection);
+
+        socket.emit('loadGame');
     }
 
     onLeaverLobby(connection = Connection){
