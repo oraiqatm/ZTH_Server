@@ -21,6 +21,18 @@ module.exports = class Database{
         });
     }
 
+    GetRespawnItems(callback){
+        this.Connect(connection => {
+
+            let query = "Select * from items where canRespawn = 1"
+            connection.query(query, (error, results) =>{
+                connection.release();
+                if(error) throw error;
+                callback(results);
+            });
+        })
+    }
+
     GetSampleData(callback){
         this.Connect(connection =>{
             let query = "SELECT * FROM player";

@@ -1,4 +1,5 @@
 let Connection = require('../Connection');
+let LobbyObjects = require('../LobbyObjects');
 
 let LobbyBase = require('./LobbyBase');
 let GameLobbySettings = require('./GameLobbySettings');
@@ -7,6 +8,10 @@ module.exports = class GameLobby extends LobbyBase{
     constructor(id, settings = GameLobbySettings){
         super(id);
         this.settings = settings;
+
+        //Server Spawning items when logging in.
+        this.Objects = new LobbyObjects();
+        this.runOnce = true;
     }
 
     onUpdate(){
@@ -34,6 +39,7 @@ module.exports = class GameLobby extends LobbyBase{
         lobby.addPlayer(connection);
 
         socket.emit('loadGame');
+        console.log(" test from gamelobby" + this.Objects.ServerRespawnObjects.length);
     }
 
     onLeaverLobby(connection = Connection){
@@ -77,5 +83,10 @@ module.exports = class GameLobby extends LobbyBase{
         });
 
     }
+
+
+    
+
+
 
 }

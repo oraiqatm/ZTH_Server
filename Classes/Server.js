@@ -14,6 +14,8 @@ module.exports = class Server{
         this.lobbys = [];
 
         this.lobbys[0] = new LobbyBase(0);
+
+        
         
     }
 
@@ -43,6 +45,7 @@ module.exports = class Server{
         socket.join(player.lobby);
         connection.lobby = lobbys[player.lobby];
         connection.lobby.onEnterLobby(connection);
+        
 
         return connection;
     }
@@ -93,6 +96,7 @@ module.exports = class Server{
             console.log('Making a new game lobby');
             let gamelobby = new GameLobby(gameLobbies.length + 1, new GameLobbySettings('FFA', 100));
             server.lobbys.push(gamelobby);
+
             server.onSwitchLobby(connection, gamelobby.id);
         }
     }
