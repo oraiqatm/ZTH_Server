@@ -33,4 +33,6 @@ module.exports = class LobbyBase{
             lobby.connections.splice(index, 1);
         }
     }
+
+  
 }

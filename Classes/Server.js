@@ -12,9 +12,14 @@ module.exports = class Server{
         this.database = new Database(true); //episode 19
         this.connections = [];
         this.lobbys = [];
+        this.tempdata = [];
 
         this.lobbys[0] = new LobbyBase(0);
 
+        //Database Queries 
+        this.database.GetRespawnItems(result => { 
+            this.tempdata = result; 
+        })
         
         
     }
@@ -94,9 +99,8 @@ module.exports = class Server{
         //All game lobbies full or we have never created one
         if(!lobbyFound){
             console.log('Making a new game lobby');
-            let gamelobby = new GameLobby(gameLobbies.length + 1, new GameLobbySettings('FFA', 100));
+            let gamelobby = new GameLobby(gameLobbies.length + 1, new GameLobbySettings('FFA', 100), server.tempdata);
             server.lobbys.push(gamelobby);
-
             server.onSwitchLobby(connection, gamelobby.id);
         }
     }

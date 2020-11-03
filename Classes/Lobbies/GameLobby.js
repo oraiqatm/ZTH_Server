@@ -5,12 +5,13 @@ let LobbyBase = require('./LobbyBase');
 let GameLobbySettings = require('./GameLobbySettings');
 
 module.exports = class GameLobby extends LobbyBase{
-    constructor(id, settings = GameLobbySettings){
+    constructor(id, settings = GameLobbySettings, items){
         super(id);
         this.settings = settings;
 
         //Server Spawning items when logging in.
         this.Objects = new LobbyObjects();
+        this.Objects.ServerRespawnObjects = items;
         this.runOnce = true;
     }
 
@@ -35,6 +36,8 @@ module.exports = class GameLobby extends LobbyBase{
         let lobby = this;
         let socket = connection.socket;
         super.onEnterLobby(connection);
+
+        this.Intialize(connection); 
 
         lobby.addPlayer(connection);
 
@@ -84,9 +87,36 @@ module.exports = class GameLobby extends LobbyBase{
 
     }
 
+    Intialize(connection = Connection){
+        let lobby = this;
+        let respawnObjects = lobby.Objects.ServerRespawnObjects; 
+
+        if(respawnObjects.length > 0){
+            let i; 
+            for (i = 0; i < respawnObjects.length; i++){
+                this.spawnObjects(connection, respawnObjects[i]);
+            }
+        }
+    }
+    
+    spawnObjects(connection = Connection, item = ServerObject ){
+        let lobby = this;
+        let data = {
+            id: item.id,
+            name: item.name,
+            position: {
+                x: item.x,
+                y: item.y,
+                z: item.z
+            } ,
+            quanity: item.baseQuanity
+        }
+        console.log("Item is sent");
+        connection.socket.emit('serverSpawnObject', data);
+        
+    }
 
     
-
 
 
 }
