@@ -1,5 +1,7 @@
 let Connection = require('../Connection');
 
+
+
 module.exports = class LobbyBase{
     constructor(id){
         this.id = id;
@@ -33,6 +35,5 @@ module.exports = class LobbyBase{
             lobby.connections.splice(index, 1);
         }
     }
-
-  
+    
 }

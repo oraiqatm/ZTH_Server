@@ -1,5 +1,6 @@
 let Connection = require('../Connection');
 let LobbyObjects = require('../LobbyObjects');
+const ServerObject = require('../Mesc/serverObject');
 
 let LobbyBase = require('./LobbyBase');
 let GameLobbySettings = require('./GameLobbySettings');
@@ -11,7 +12,8 @@ module.exports = class GameLobby extends LobbyBase{
 
         //Server Spawning items when logging in.
         this.Objects = new LobbyObjects();
-        this.Objects.ServerRespawnObjects = items;
+        this.Objects.ServerRespawnObjects = this.convertSO(items);
+       
         this.runOnce = true;
     }
 
@@ -42,7 +44,7 @@ module.exports = class GameLobby extends LobbyBase{
         lobby.addPlayer(connection);
 
         socket.emit('loadGame');
-        console.log(" test from gamelobby" + this.Objects.ServerRespawnObjects.length);
+      
     }
 
     onLeaverLobby(connection = Connection){
@@ -99,24 +101,39 @@ module.exports = class GameLobby extends LobbyBase{
         }
     }
     
+    //--------------------------------------Game Engine to Server -----------------------------------------------------------------------
+
+
+    //--------------------------------------Utilities functions ---------------------------------------------------------------------------
+    convertSO(items){
+        let arr = [];
+        let i =0;
+
+        for(i =0; i < items.length; i++){
+            let tempSO = new ServerObject();
+            tempSO.id = items[i].id;
+            tempSO.name = items[i].name;
+            tempSO.position.x = items[i].x; 
+            tempSO.position.y = items[i].y;
+            tempSO.position.z = items[i].z;
+            tempSO.quanity = items[i].quanity;
+            arr.push(tempSO);
+
+        }    
+        return arr;
+    }
+
     spawnObjects(connection = Connection, item = ServerObject ){
         let lobby = this;
         let data = {
             id: item.id,
             name: item.name,
-            position: {
-                x: item.x,
-                y: item.y,
-                z: item.z
-            } ,
+            position: item.position,
             quanity: item.baseQuanity
         }
-        console.log("Item is sent");
+        console.log("Item is sent" + item.position);
         connection.socket.emit('serverSpawnObject', data);
         
     }
-
-    
-
 
 }
