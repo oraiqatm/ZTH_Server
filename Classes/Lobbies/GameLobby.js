@@ -116,7 +116,7 @@ module.exports = class GameLobby extends LobbyBase{
             tempSO.position.x = items[i].x; 
             tempSO.position.y = items[i].y;
             tempSO.position.z = items[i].z;
-            tempSO.quanity = items[i].quanity;
+            tempSO.quanity = items[i].baseQuanity;
             arr.push(tempSO);
 
         }    
@@ -129,9 +129,9 @@ module.exports = class GameLobby extends LobbyBase{
             id: item.id,
             name: item.name,
             position: item.position,
-            quanity: item.baseQuanity
+            quanity: item.quanity
         }
-        console.log("Item is sent" + item.position);
+        console.log("Item is sent" + item.quanity);
         connection.socket.emit('serverSpawnObject', data);
         
     }
