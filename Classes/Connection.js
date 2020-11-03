@@ -69,5 +69,10 @@ module.exports = class Connection{
             
             socket.broadcast.to(connection.lobby.id).emit('updateAnimation', sendData);
         });
+
+        socket.on('serverUnSpawnObject', function(data){
+            connection.lobby.unSpawnObject(connection, data);
+        });
+
     }
 }

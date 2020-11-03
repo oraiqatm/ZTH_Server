@@ -19,6 +19,7 @@ module.exports = class GameLobby extends LobbyBase{
 
     onUpdate(){
         let lobby = this;
+        this.respawnObjects();
 
     }
 
@@ -134,6 +135,41 @@ module.exports = class GameLobby extends LobbyBase{
         console.log("Item is sent" + item.quanity);
         connection.socket.emit('serverSpawnObject', data);
         
+    }
+    unSpawnObject(connection = Connection, data){
+        console.log("unspawn Object " + data.itemID);
+        let lobby = this;
+        let sendData ={
+            id: data.itemID
+        }
+
+        connection.socket.emit('serverUnSpawnObject',sendData);
+        connection.socket.broadcast.to(lobby.id).emit('serverUnSpawnObject', sendData);
+
+        let i;
+        for(i=0; i< this.Objects.ServerRespawnObjects.length; i++){
+            if(this.Objects.ServerRespawnObjects[i].id == data.itemID){
+                this.Objects.ServerRespawnObjects[i].destroyed = true;
+            }
+        }
+    }
+
+    respawnObjects(){
+        let lobby = this;
+        let connections = lobby.connections;
+
+        this.Objects.ServerRespawnObjects.forEach(item => {
+            if(item.destroyed){
+                let isRespawn = item.respawnCounter();
+
+                if(isRespawn){
+                    connections.forEach(connection => {
+                        item.destroyed = false;
+                        this.spawnObjects(connection, item);
+                    })
+                }
+            }
+        })
     }
 
 }
