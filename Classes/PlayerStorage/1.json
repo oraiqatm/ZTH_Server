@@ -1,0 +1,34 @@
+{
+    "Inventory": [
+        {"name": "Sword", "id": 1, "imgName":"sword.png", "amound": 20, "isEmpty": false},
+        {"name": "", "id": 0, "imgName":"", "amound": 1, "isEmpty": true},
+        {"name": "", "id": 0, "imgName":"", "amound": 1, "isEmpty": true},
+        {"name": "", "id": 0, "imgName":"", "amound": 1, "isEmpty": true},
+        {"name": "", "id": 0, "imgName":"", "amound": 1, "isEmpty": true},
+        {"name": "", "id": 0, "imgName":"", "amound": 1, "isEmpty": true},
+        {"name": "", "id": 0, "imgName":"", "amound": 1, "isEmpty": true},
+        {"name": "", "id": 0, "imgName":"", "amound": 1, "isEmpty": true},
+        {"name": "", "id": 0, "imgName":"", "amound": 1, "isEmpty": true},
+        {"name": "", "id": 0, "imgName":"", "amound": 1, "isEmpty": true},
+        {"name": "", "id": 0, "imgName":"", "amound": 1, "isEmpty": true},
+        {"name": "", "id": 0, "imgName":"", "amound": 1, "isEmpty": true},
+        {"name": "", "id": 0, "imgName":"", "amound": 1, "isEmpty": true},
+        {"name": "", "id": 0, "imgName":"", "amound": 1, "isEmpty": true},
+        {"name": "", "id": 0, "imgName":"", "amound": 1, "isEmpty": true},
+        {"name": "", "id": 0, "imgName":"", "amound": 1, "isEmpty": true},
+        {"name": "", "id": 0, "imgName":"", "amound": 1, "isEmpty": true},
+        {"name": "", "id": 0, "imgName":"", "amound": 1, "isEmpty": true},
+        {"name": "", "id": 0, "imgName":"", "amound": 1, "isEmpty": true},
+        {"name": "", "id": 0, "imgName":"", "amound": 1, "isEmpty": true},
+        {"name": "", "id": 0, "imgName":"", "amound": 1, "isEmpty": true},
+        {"name": "", "id": 0, "imgName":"", "amound": 1, "isEmpty": true},
+        {"name": "", "id": 0, "imgName":"", "amound": 1, "isEmpty": true},
+        {"name": "", "id": 0, "imgName":"", "amound": 1, "isEmpty": true},
+        {"name": "", "id": 0, "imgName":"", "amound": 1, "isEmpty": true},
+        {"name": "", "id": 0, "imgName":"", "amound": 1, "isEmpty": true},
+        {"name": "", "id": 0, "imgName":"", "amound": 1, "isEmpty": true},
+        {"name": "", "id": 0, "imgName":"", "amound": 1, "isEmpty": true},
+        {"name": "", "id": 0, "imgName":"", "amound": 1, "isEmpty": true}
+
+    ]
+}
