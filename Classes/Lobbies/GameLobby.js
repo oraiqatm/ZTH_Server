@@ -132,12 +132,12 @@ module.exports = class GameLobby extends LobbyBase{
             position: item.position,
             quanity: item.quanity
         }
-        console.log("Item is sent" + item.quanity);
+       // console.log("Item is sent" + item.quanity);
         connection.socket.emit('serverSpawnObject', data);
         
     }
     unSpawnObject(connection = Connection, data){
-        console.log("unspawn Object " + data.itemID);
+        //console.log("unspawn Object " + data.itemID);
         let lobby = this;
         let sendData ={
             id: data.itemID
