@@ -21,7 +21,7 @@ module.exports = class Connection{
         });
 
         socket.on('updatePosition', function(data){
-
+            
             let sendData = {
                 id: player.id,
                 position:{
@@ -31,23 +31,25 @@ module.exports = class Connection{
                 }
             }
             socket.broadcast.to(connection.lobby.id).emit('updatePosition', sendData); 
-
             
+              
         });
 
         socket.on('updateRotation', function(data){
-
+            
             let sendData = {
                 id: player.id,
                 modelRotation: data.modelRotation
             }
-            
-            
+                
+                
             socket.broadcast.to(connection.lobby.id).emit('updateRotation', sendData);
+            
+            
         });
 
         socket.on('updateAnimation', function(data){
-            
+           
             let sendData = {
                 id: player.id,
                 vertical: data.vert,
@@ -64,10 +66,12 @@ module.exports = class Connection{
                 jump:data.jump,
                 actionP:data.actionP,
                 isInteracting: data.isInteracting
-    
+        
             }
+                
+                socket.broadcast.to(connection.lobby.id).emit('updateAnimation', sendData);
             
-            socket.broadcast.to(connection.lobby.id).emit('updateAnimation', sendData);
+            
         });
 
         socket.on('serverUnSpawnObject', function(data){

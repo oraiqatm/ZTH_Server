@@ -1,6 +1,6 @@
 var shortID = require('shortid');
 var Vector3 = require('./Vector3.js');
-
+let PlayerInfo = require('./Mesc/playerInfo');
 
 
 module.exports = class Player{
@@ -11,9 +11,6 @@ module.exports = class Player{
 
         this.position = new Vector3();
         this.modelRotation = new Number(0);
-
-
-
 
         //Animation variables
         this.vert = new Number(0);

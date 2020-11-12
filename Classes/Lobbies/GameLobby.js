@@ -172,4 +172,8 @@ module.exports = class GameLobby extends LobbyBase{
         })
     }
 
+    loadPlayerInfo(){
+        
+    }
+
 }
