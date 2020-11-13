@@ -29,6 +29,7 @@ module.exports = class Connection{
                     fs.writeFile(makeDir1, JSON.stringify(m), (err) => { // will overrite the file
                         if(err) console.log(err);
                     });
+                    console.log("File: " + result.id +".json was created on server.");
                 }
                 
             });
