@@ -34,10 +34,11 @@ module.exports = class Connection{
             });
         });
         socket.on('signIn', function(data){
-            server.database.SignIn(data.username, data.password, result =>{
+            server.database.SignIn(data.username, data.password, results =>{
+              
                 //Results will return a true or false based on if account already exists or not
                 console.log(results.valid + ': ' + results.reason); 
-                if(result.valid)
+                if(results.valid)
                 {
                     socket.emit('signIn');
                 }

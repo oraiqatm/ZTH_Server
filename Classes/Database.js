@@ -74,9 +74,9 @@ module.exports = class Database{
     //adding a new player to the database
     CreateAccount(username, password, callback){
         //You may want to check the length and perform a regex on this
-        var hashedPassword = PasswordHash.generate(password);
         
-        
+        var hashedPassword = PasswordHash.generate(password, {saltLength: 30});
+        this.GetNumberofPlayers();
         
         //Attempt to see if someone is already in the db
         this.Connect(connection =>{
@@ -113,7 +113,43 @@ module.exports = class Database{
             });
              
         });
-        
-        
+         
+    }
+
+
+    SignIn(username, password, callback){
+      
+       
+
+        this.Connect(connection=>{
+            let query = "SELECT password , id FROM player WHERE username = ?";
+            connection.query(query, [username], (error, results) => {
+                connection.release();
+                if(error) throw error;
+
+                if(results[0] != undefined)
+                {
+                    
+                    if(PasswordHash.verify(password, results[0].password)){
+                        callback({
+                            id: results[0].id,
+                            valid: true,
+                            reason: "Success"
+                        });
+                    }else{
+                        //dont return this or youll get botted.
+                        callback({
+                            valid: false,
+                            reason: "Password does not match"
+                        });
+                    }
+                }else{
+                    callback({
+                        valid: false,
+                        reason: "User does not exist."
+                    });
+                }
+            });
+        });
     }
 }

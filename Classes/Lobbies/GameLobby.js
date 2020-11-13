@@ -105,9 +105,9 @@ module.exports = class GameLobby extends LobbyBase{
             }
         }
 
-        let makeDir1 = './Classes/PlayerStorage/'+ 1 +'.json';
-        var m = JSON.parse(fs.readFileSync(makeDir1).toString());
-        console.log(m.Inventory.length);
+      //  let makeDir1 = './Classes/PlayerStorage/'+ 1 +'.json';
+       // var m = JSON.parse(fs.readFileSync(makeDir1).toString());
+      //  console.log(m.Inventory.length);
        
         
 
