@@ -12,6 +12,7 @@ module.exports = class Player{
 
         this.position = new Vector3();
         this.modelRotation = new Number(0);
+        this.playerInfo = new PlayerInfo();
 
         //Animation variables
         this.vert = new Number(0);

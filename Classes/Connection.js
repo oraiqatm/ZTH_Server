@@ -49,7 +49,8 @@ module.exports = class Connection{
                             console.log.length("The file does not exist")
                         }else{
                             var m = JSON.parse(fs.readFileSync(playerFile).toString());
-                            console.log(m);
+                            player.playerInfo.generateInventory(m);
+                            
                             socket.emit('signIn');
                         }
                     });
