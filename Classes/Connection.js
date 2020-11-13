@@ -40,7 +40,19 @@ module.exports = class Connection{
                 console.log(results.valid + ': ' + results.reason); 
                 if(results.valid)
                 {
-                    socket.emit('signIn');
+                    
+                    player.playerId = results.id;
+                    let playerFile = './Classes/PlayerStorage/'+ results.id +'.json';
+                    fs.access(playerFile, (err) =>{
+                        if(err){
+                            console.log.length("The file does not exist")
+                        }else{
+                            var m = JSON.parse(fs.readFileSync(playerFile).toString());
+                            console.log(m);
+                            socket.emit('signIn');
+                        }
+                    });
+                    
                 }
             });
         });

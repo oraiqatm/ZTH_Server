@@ -76,6 +76,7 @@ module.exports = class Database{
         //You may want to check the length and perform a regex on this
         
         var hashedPassword = PasswordHash.generate(password, {saltLength: 30});
+        console.log(hashedPassword.length);
         this.GetNumberofPlayers();
         
         //Attempt to see if someone is already in the db
@@ -129,7 +130,7 @@ module.exports = class Database{
 
                 if(results[0] != undefined)
                 {
-                    
+                    console.log(password, results[0].password.length);
                     if(PasswordHash.verify(password, results[0].password)){
                         callback({
                             id: results[0].id,
