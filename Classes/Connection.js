@@ -5,6 +5,7 @@ module.exports = class Connection{
         this.player;
         this.server;
         this.lobby;
+        
     }
 
     createEvents(){
@@ -14,6 +15,29 @@ module.exports = class Connection{
         let player = connection.player;
 
         socket.on('disconnect', function(){
+            let playerFile = './Classes/PlayerStorage/'+ player.playerId +'.json';
+            let playerInv = player.playerInfo.inventorySlot;
+            fs.access(playerFile, (err) =>{
+                if(err){
+                    console.log("The file does not exist")
+                }else{
+                    var m = JSON.parse(fs.readFileSync(playerFile).toString());
+                    let i;
+                    
+                    for(i=0; i < m.Inventory.length; i++)
+                    {
+                        m.Inventory[i].name = playerInv[i].name;
+                        m.Inventory[i].id = playerInv[i].id;
+                        m.Inventory[i].amount = playerInv[i].amount;
+                        m.Inventory[i].isEmpty = playerInv[i].isEmpty;
+                    }
+                    fs.writeFile(playerFile, JSON.stringify(m), (err) => { // will overrite the file
+                        if(err) console.log(err);
+                    });
+                }
+            });
+            
+
             server.onDisconnected(connection);
         });
 
@@ -46,7 +70,7 @@ module.exports = class Connection{
                     let playerFile = './Classes/PlayerStorage/'+ results.id +'.json';
                     fs.access(playerFile, (err) =>{
                         if(err){
-                            console.log.length("The file does not exist")
+                            console.log("The file does not exist")
                         }else{
                             var m = JSON.parse(fs.readFileSync(playerFile).toString());
                             player.playerInfo.generateInventory(m);
@@ -117,7 +141,14 @@ module.exports = class Connection{
         });
 
         socket.on('serverUnSpawnObject', function(data){
+            player.playerInfo.addToInventory(data, connection);
             connection.lobby.unSpawnObject(connection, data);
+            
+
+        });
+
+        socket.on('updateInventory', function(){
+            player.playerInfo.updateInventory(connection);
         });
 
     }

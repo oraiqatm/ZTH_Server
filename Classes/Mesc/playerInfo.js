@@ -1,5 +1,6 @@
 let invSlot = require("./invSlot");
-
+let Connection = require("../Connection");
+let fs = require('fs');
 module.exports = class playerInfo{
     constructor()
     {
@@ -7,7 +8,16 @@ module.exports = class playerInfo{
         this.armorSlot =[];
         
     }
-
+    updateInventory(connection = Connection)
+    {
+        let socket = connection.socket;
+        let sendData = {
+            id: connection.player.id,
+            Inventory: this.inventorySlot
+        }
+        console.log("inventory sent!");
+        socket.emit('updateInventory', sendData);
+    }
     generateInventory(data)
     {
         let dataArr = data.Inventory;
@@ -17,11 +27,26 @@ module.exports = class playerInfo{
         {
             let tempSlot = new invSlot(dataArr[i].name, dataArr[i].id, dataArr[i].amount, dataArr[i].isEmpty);
             this.inventorySlot.push(tempSlot)
-        }  
+        } 
+        
     }
 
-    addToInventory(data)
+    addToInventory(data, connection = Connection)
     {
-
+        let tempSlot = new invSlot(data.name, data.itemID, data.amount, false);
+        
+        let i;
+        for(i=0; i<this.inventorySlot.length; i++)
+        {
+            if(this.inventorySlot[i].isEmpty){
+                this.inventorySlot[i] = tempSlot; 
+                this.updateInventory(connection);
+                return;  
+            }
+        }
+        console.log("Inventory is full");
+        
     }
+
+    
 };

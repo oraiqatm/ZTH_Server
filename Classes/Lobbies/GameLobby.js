@@ -23,7 +23,12 @@ module.exports = class GameLobby extends LobbyBase{
 
     onUpdate(){
         let lobby = this;
-        this.respawnObjects();
+        if(this.connections.length >0){
+            this.respawnObjects();
+        }
+        
+       
+        
 
     }
 
@@ -42,13 +47,14 @@ module.exports = class GameLobby extends LobbyBase{
     onEnterLobby(connection = Connection){
         let lobby = this;
         let socket = connection.socket;
+        let player = connection.player;
         super.onEnterLobby(connection);
 
         this.Intialize(connection); 
-
         lobby.addPlayer(connection);
 
         socket.emit('loadGame');
+        
       
     }
 
