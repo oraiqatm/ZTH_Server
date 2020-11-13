@@ -1,3 +1,4 @@
+let fs = require('fs');
 module.exports = class Connection{
     constructor(){
         this.socket;
@@ -14,6 +15,30 @@ module.exports = class Connection{
 
         socket.on('disconnect', function(){
             server.onDisconnected(connection);
+        });
+
+        socket.on('createAccount', function(data){
+            server.database.CreateAccount(data.username, data.password, result =>{
+                //Results will return a true or false based on if account already exists or not
+                console.log(result.valid + ': ' + result.reason + " id:" + result.id);
+                //Creating the save json file on server
+                let template = './Classes/PlayerStorage/template.json';
+                var m = JSON.parse(fs.readFileSync(template).toString()); 
+                let makeDir1 = './Classes/PlayerStorage/'+ result.id +'.json';
+                fs.writeFile(makeDir1, JSON.stringify(m), (err) => { // will overrite the file
+                    if(err) console.log(err);
+                });
+            });
+        });
+        socket.on('signIn', function(data){
+            server.database.SignIn(data.username, data.password, result =>{
+                //Results will return a true or false based on if account already exists or not
+                console.log(results.valid + ': ' + results.reason); 
+                if(result.valid)
+                {
+                    socket.emit('signIn');
+                }
+            });
         });
 
         socket.on('joinGame', function(){

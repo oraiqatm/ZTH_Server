@@ -17,7 +17,9 @@ module.exports = class Server{
         this.lobbys[0] = new LobbyBase(0);
 
         //Database Queries 
-        this.database.GetRespawnItems(result => { 
+        this.database.GetNumberofPlayers(); //gets number of players in the database
+
+        this.database.GetRespawnItems(result => {  // Getting respawnable items from DB
             this.tempdata = result; 
         })
         

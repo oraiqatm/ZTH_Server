@@ -10,6 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "mysql": "^2.18.1",
+    "password-hash": "^1.2.2",
     "shortid": "^2.2.15",
     "socket.io": "^2.3.0"
   }
