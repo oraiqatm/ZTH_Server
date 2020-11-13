@@ -1,9 +1,8 @@
 module.exports = class invSlot{
-    constructor(itemName, itemId, imgName, quanity)
+    constructor(itemName, itemId, quanity)
     {
         this.name = itemName;
         this.id = itemId;
-        this.imgName = imgName;
         this.amount = quanity; 
         this.isEmpty = true;
     }

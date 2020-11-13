@@ -50,7 +50,6 @@ module.exports = class Connection{
                         }else{
                             var m = JSON.parse(fs.readFileSync(playerFile).toString());
                             player.playerInfo.generateInventory(m);
-                            
                             socket.emit('signIn');
                         }
                     });

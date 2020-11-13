@@ -15,8 +15,13 @@ module.exports = class playerInfo{
         
         for(i=0; i< dataArr.length; i++)
         {
-            let tempSlot = new invSlot(dataArr[i].name, dataArr[i].id, dataArr[i].imgName, dataArr[i].amount, dataArr[i].isEmpty);
+            let tempSlot = new invSlot(dataArr[i].name, dataArr[i].id, dataArr[i].amount, dataArr[i].isEmpty);
             this.inventorySlot.push(tempSlot)
         }  
+    }
+
+    addToInventory(data)
+    {
+
     }
 };
