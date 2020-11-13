@@ -22,12 +22,15 @@ module.exports = class Connection{
                 //Results will return a true or false based on if account already exists or not
                 console.log(result.valid + ': ' + result.reason + " id:" + result.id);
                 //Creating the save json file on server
-                let template = './Classes/PlayerStorage/template.json';
-                var m = JSON.parse(fs.readFileSync(template).toString()); 
-                let makeDir1 = './Classes/PlayerStorage/'+ result.id +'.json';
-                fs.writeFile(makeDir1, JSON.stringify(m), (err) => { // will overrite the file
-                    if(err) console.log(err);
-                });
+                if(result.valid){
+                    let template = './Classes/PlayerStorage/template.json';
+                    var m = JSON.parse(fs.readFileSync(template).toString()); 
+                    let makeDir1 = './Classes/PlayerStorage/'+ result.id +'.json';
+                    fs.writeFile(makeDir1, JSON.stringify(m), (err) => { // will overrite the file
+                        if(err) console.log(err);
+                    });
+                }
+                
             });
         });
         socket.on('signIn', function(data){
