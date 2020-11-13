@@ -5,6 +5,10 @@ const ServerObject = require('../Mesc/serverObject');
 let LobbyBase = require('./LobbyBase');
 let GameLobbySettings = require('./GameLobbySettings');
 
+//Test
+let fs = require('fs');
+
+
 module.exports = class GameLobby extends LobbyBase{
     constructor(id, settings = GameLobbySettings, items){
         super(id);
@@ -100,6 +104,14 @@ module.exports = class GameLobby extends LobbyBase{
                 this.spawnObjects(connection, respawnObjects[i]);
             }
         }
+
+        let makeDir1 = './Classes/PlayerStorage/'+ 1 +'.json';
+        var m = JSON.parse(fs.readFileSync(makeDir1).toString());
+        console.log(m.Inventory.length);
+       
+        
+
+
     }
     
     //--------------------------------------Game Engine to Server -----------------------------------------------------------------------
