@@ -6,13 +6,17 @@ module.exports = class playerInfo{
     {
         this.inventorySlot = [];
         this.armorSlot =[];
+        this.InventoryFull = false;
         
     }
     updateInventory(connection = Connection)
-    {
+    {   
+        this.InventoryFull = this.checkInvFull();
+
         let socket = connection.socket;
         let sendData = {
             id: connection.player.id,
+            invFull: this.InventoryFull,
             Inventory: this.inventorySlot
         }
         console.log("inventory sent!");
@@ -48,5 +52,16 @@ module.exports = class playerInfo{
         
     }
 
+    checkInvFull(){
+        let i;
+        for(i=0; i < this.inventorySlot.length; i++)
+        {
+            if(this.inventorySlot[i].isEmpty)
+            {
+                return false;
+            }
+        }
+        return true;
+    }
     
 };
