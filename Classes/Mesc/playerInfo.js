@@ -1,9 +1,14 @@
 let invSlot = require("./invSlot");
+let armorSlot = require('./armorSlot');
 let Connection = require("../Connection");
+
 let fs = require('fs');
+
+
 module.exports = class playerInfo{
     constructor()
     {
+        this.coins = new Number(0);
         this.inventorySlot = [];
         this.armorSlot =[];
         this.InventoryFull = false;
@@ -16,6 +21,7 @@ module.exports = class playerInfo{
         let socket = connection.socket;
         let sendData = {
             id: connection.player.id,
+            money: this.coins,
             invFull: this.InventoryFull,
             Inventory: this.inventorySlot
         }
@@ -24,6 +30,7 @@ module.exports = class playerInfo{
     }
     generateInventory(data)
     {
+        this.coins = data.Coins; 
         let dataArr = data.Inventory;
         let i;
         

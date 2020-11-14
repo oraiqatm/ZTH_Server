@@ -23,7 +23,7 @@ module.exports = class Connection{
                 }else{
                     var m = JSON.parse(fs.readFileSync(playerFile).toString());
                     let i;
-                    
+                    m.Coins = player.playerInfo.coins;
                     for(i=0; i < m.Inventory.length; i++)
                     {
                         m.Inventory[i].name = playerInv[i].name;
