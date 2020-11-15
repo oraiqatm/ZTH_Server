@@ -32,6 +32,7 @@ module.exports = class Connection{
                         m.Inventory[i].name = playerInv[i].name;
                         m.Inventory[i].id = playerInv[i].id;
                         m.Inventory[i].amount = playerInv[i].amount;
+                        m.Inventory[i].type = playerInv[i].type;
                         m.Inventory[i].isEmpty = playerInv[i].isEmpty;
                     }
                     
@@ -40,6 +41,7 @@ module.exports = class Connection{
                         m.Armor[i].name = playerArmor[i].name;
                         m.Armor[i].id = playerArmor[i].id;
                         m.Armor[i].amount = playerArmor[i].amount;
+                        m.Armor[i].type = playerArmor[i].type;
                         m.Armor[i].isEmpty = playerArmor[i].isEmpty;
                     }
                     fs.writeFile(playerFile, JSON.stringify(m), (err) => { // will overrite the file

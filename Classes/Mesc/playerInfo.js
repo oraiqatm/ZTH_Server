@@ -13,6 +13,7 @@ module.exports = class playerInfo{
         this.armorSlot =[];
         this.InventoryFull = false;
         
+        
     }
     updateInventory(connection = Connection)
     {   
@@ -26,8 +27,6 @@ module.exports = class playerInfo{
             Inventory: this.inventorySlot,
             Armor:this.armorSlot
         }
-        console.log("inventory sent!");
-        console.log(this.armorSlot);
         socket.emit('updateInventory', sendData);
     }
     generateInventory(data)
@@ -40,12 +39,12 @@ module.exports = class playerInfo{
         
         for(i=0; i< dataArr.length; i++)
         {
-            let tempSlot = new invSlot(dataArr[i].name, dataArr[i].id, dataArr[i].amount, dataArr[i].isEmpty);
+            let tempSlot = new invSlot(dataArr[i].name, dataArr[i].id, dataArr[i].amount, dataArr[i].type, dataArr[i].isEmpty);
             this.inventorySlot.push(tempSlot)
         } 
         for(i=0; i< dataArmorArr.length; i++)
         {
-            let tempSlot1 = new invSlot(dataArmorArr[i].name, dataArmorArr[i].id, dataArmorArr[i].amount, dataArmorArr[i].isEmpty);
+            let tempSlot1 = new invSlot(dataArmorArr[i].name, dataArmorArr[i].id, dataArmorArr[i].amount, dataArmorArr[i].type,dataArmorArr[i].isEmpty);
             this.armorSlot.push(tempSlot1)
         } 
              
@@ -54,7 +53,7 @@ module.exports = class playerInfo{
 
     addToInventory(data, connection = Connection)
     {
-        let tempSlot = new invSlot(data.name, data.itemID, data.amount, false);
+        let tempSlot = new invSlot(data.name, data.itemID, data.amount, data.type,false);
         
         let i;
         for(i=0; i<this.inventorySlot.length; i++)
@@ -65,7 +64,6 @@ module.exports = class playerInfo{
                 return;  
             }
         }
-        console.log("Inventory is full");
         
     }
 
@@ -102,11 +100,72 @@ module.exports = class playerInfo{
 
     equipItem(data, connection = Connection)
     {
-        //Need to check if already equiping....
-        console.log(data.type, data.slotNumber, data.index );   
-        this.armorSlot[data.slotNumber] = this.inventorySlot[data.index];
-        //this.inventorySlot[data.index].makeEmpty();
-        //console.log(this.armorSlot);
+        if(data.type == "double")
+        {
+            if (this.armorSlot[data.slotNumber].isEmpty)
+            {
+                this.armorSlot[data.slotNumber].makeCopy(this.inventorySlot[data.index])
+                this.inventorySlot[data.index].makeEmpty();
+            }
+            else if(!this.armorSlot[data.slotNumber].isEmpty && this.armorSlot[data.slotNumber+1].isEmpty)
+            {
+                let temp = new invSlot();
+                temp.makeCopy(this.inventorySlot[data.index]);
+                this.inventorySlot[data.index].makeCopy(this.armorSlot[data.slotNumber]);
+                this.armorSlot[data.slotNumber].makeCopy(temp);
+            } 
+            else if(!this.armorSlot[data.slotNumber].isEmpty && !this.armorSlot[data.slotNumber+1].isEmpty)
+            {
+                
+                if(!this.checkInvFull(1))
+                {
+                    let temp = new invSlot();
+                    temp.makeCopy(this.inventorySlot[data.index]);
+                    this.inventorySlot[data.index].makeCopy(this.armorSlot[data.slotNumber]);
+                    this.armorSlot[data.slotNumber].makeCopy(temp);
+
+                    let freeSpot = this.findEmptySlot();
+                    this.inventorySlot[freeSpot].makeCopy(this.armorSlot[data.slotNumber+1]);
+                    this.armorSlot[data.slotNumber+1].makeEmpty()
+                }
+            }
+        }
+
+        else if(data.type == "single")
+        {
+            if(data.slotNumber == 9 && this.armorSlot[8].type == "double")
+            {
+                let temp = new invSlot();
+                temp.makeCopy(this.inventorySlot[data.index]);
+                this.inventorySlot[data.index].makeCopy(this.armorSlot[8]);
+                this.armorSlot[8].makeEmpty();
+                this.armorSlot[9].makeCopy(temp);
+ 
+            }
+            else
+            {
+                if(!this.armorSlot[data.slotNumber].isEmpty)
+                {
+                    let temp = new invSlot();
+                    temp.makeCopy(this.inventorySlot[data.index]);
+                    this.inventorySlot[data.index].makeCopy(this.armorSlot[data.slotNumber]);
+                    this.armorSlot[data.slotNumber].makeCopy(temp);
+
+                }
+                else
+                {
+                    
+                    this.armorSlot[data.slotNumber].makeCopy(this.inventorySlot[data.index])
+                    this.inventorySlot[data.index].makeEmpty();
+                        
+                    
+                }  
+            }
+
+        }
+        
+        
+        //console.log(data.type, this.armorSlot[8].type, data.slotNumber);   
         
         this.updateInventory(connection);
         
