@@ -5,5 +5,15 @@ module.exports = class invSlot{
         this.id = itemId;
         this.amount = quanity; 
         this.isEmpty = isEmpty;
+
+        //Make some sort of look up table for item information.
+    }
+
+    makeEmpty()
+    {
+        this.name ="";
+        this.id = 0;
+        this.amount = 1;
+        this.isEmpty = true;
     }
 }

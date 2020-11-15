@@ -1,5 +1,5 @@
 let invSlot = require("./invSlot");
-let armorSlot = require('./armorSlot');
+
 let Connection = require("../Connection");
 
 let fs = require('fs');
@@ -16,22 +16,26 @@ module.exports = class playerInfo{
     }
     updateInventory(connection = Connection)
     {   
-        this.InventoryFull = this.checkInvFull();
+        this.InventoryFull = this.checkInvFull(1);
 
         let socket = connection.socket;
         let sendData = {
             id: connection.player.id,
             money: this.coins,
             invFull: this.InventoryFull,
-            Inventory: this.inventorySlot
+            Inventory: this.inventorySlot,
+            Armor:this.armorSlot
         }
         console.log("inventory sent!");
+        console.log(this.armorSlot);
         socket.emit('updateInventory', sendData);
     }
     generateInventory(data)
     {
         this.coins = data.Coins; 
         let dataArr = data.Inventory;
+        let dataArmorArr = data.Armor;
+ 
         let i;
         
         for(i=0; i< dataArr.length; i++)
@@ -39,6 +43,12 @@ module.exports = class playerInfo{
             let tempSlot = new invSlot(dataArr[i].name, dataArr[i].id, dataArr[i].amount, dataArr[i].isEmpty);
             this.inventorySlot.push(tempSlot)
         } 
+        for(i=0; i< dataArmorArr.length; i++)
+        {
+            let tempSlot1 = new invSlot(dataArmorArr[i].name, dataArmorArr[i].id, dataArmorArr[i].amount, dataArmorArr[i].isEmpty);
+            this.armorSlot.push(tempSlot1)
+        } 
+             
         
     }
 
@@ -59,16 +69,46 @@ module.exports = class playerInfo{
         
     }
 
-    checkInvFull(){
+    checkInvFull(x = Number){
+        let i;
+        let count = new Number(0);
+        for(i=0; i < this.inventorySlot.length; i++)
+        {
+            if(this.inventorySlot[i].isEmpty)
+            {
+                count+=1;
+            }
+        }
+
+        if(count >=x)
+            return false;
+
+        return true;
+    }
+
+    findEmptySlot(slots)
+    {
         let i;
         for(i=0; i < this.inventorySlot.length; i++)
         {
             if(this.inventorySlot[i].isEmpty)
             {
-                return false;
+                return i;
             }
         }
-        return true;
+        return undefined;
     }
     
+
+    equipItem(data, connection = Connection)
+    {
+        //Need to check if already equiping....
+        console.log(data.type, data.slotNumber, data.index );   
+        this.armorSlot[data.slotNumber] = this.inventorySlot[data.index];
+        //this.inventorySlot[data.index].makeEmpty();
+        //console.log(this.armorSlot);
+        
+        this.updateInventory(connection);
+        
+    }
 };

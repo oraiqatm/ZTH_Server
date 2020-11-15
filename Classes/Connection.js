@@ -17,10 +17,13 @@ module.exports = class Connection{
         socket.on('disconnect', function(){
             let playerFile = './Classes/PlayerStorage/'+ player.playerId +'.json';
             let playerInv = player.playerInfo.inventorySlot;
+            let playerArmor = player.playerInfo.armorSlot;
+
             fs.access(playerFile, (err) =>{
                 if(err){
                     console.log("The file does not exist")
-                }else{
+                }else
+                {
                     var m = JSON.parse(fs.readFileSync(playerFile).toString());
                     let i;
                     m.Coins = player.playerInfo.coins;
@@ -30,6 +33,14 @@ module.exports = class Connection{
                         m.Inventory[i].id = playerInv[i].id;
                         m.Inventory[i].amount = playerInv[i].amount;
                         m.Inventory[i].isEmpty = playerInv[i].isEmpty;
+                    }
+                    
+                    for(i=0; i < m.Armor.length; i++)
+                    {
+                        m.Armor[i].name = playerArmor[i].name;
+                        m.Armor[i].id = playerArmor[i].id;
+                        m.Armor[i].amount = playerArmor[i].amount;
+                        m.Armor[i].isEmpty = playerArmor[i].isEmpty;
                     }
                     fs.writeFile(playerFile, JSON.stringify(m), (err) => { // will overrite the file
                         if(err) console.log(err);
@@ -149,6 +160,10 @@ module.exports = class Connection{
 
         socket.on('updateInventory', function(){
             player.playerInfo.updateInventory(connection);
+        });
+
+        socket.on('equipItem', function(data){
+            player.playerInfo.equipItem(data, connection);
         });
 
     }
