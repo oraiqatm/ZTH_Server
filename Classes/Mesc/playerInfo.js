@@ -100,35 +100,48 @@ module.exports = class playerInfo{
 
     equipItem(data, connection = Connection)
     {
+        //hard code the slots
         if(data.type == "double")
         {
-            if (this.armorSlot[data.slotNumber].isEmpty)
-            {
-                this.armorSlot[data.slotNumber].makeCopy(this.inventorySlot[data.index])
-                this.inventorySlot[data.index].makeEmpty();
+            if (this.armorSlot[8].isEmpty)
+            {   
+                if(!this.armorSlot[9].isEmpty)
+                {
+                    let temp = new invSlot();
+                    temp.makeCopy( this.armorSlot[9]);
+                    this.armorSlot[9].makeEmpty();
+                    this.armorSlot[8].makeCopy(this.inventorySlot[data.index]);
+                    this.inventorySlot[data.index].makeCopy(temp);
+                }
+                else{
+                    this.armorSlot[8].makeCopy(this.inventorySlot[data.index])
+                    this.inventorySlot[data.index].makeEmpty();
+                }
+                
             }
-            else if(!this.armorSlot[data.slotNumber].isEmpty && this.armorSlot[data.slotNumber+1].isEmpty)
+            else if(!this.armorSlot[8].isEmpty && this.armorSlot[9].isEmpty)
             {
                 let temp = new invSlot();
                 temp.makeCopy(this.inventorySlot[data.index]);
-                this.inventorySlot[data.index].makeCopy(this.armorSlot[data.slotNumber]);
-                this.armorSlot[data.slotNumber].makeCopy(temp);
+                this.inventorySlot[data.index].makeCopy(this.armorSlot[8]);
+                this.armorSlot[8].makeCopy(temp);
             } 
-            else if(!this.armorSlot[data.slotNumber].isEmpty && !this.armorSlot[data.slotNumber+1].isEmpty)
+            else if(!this.armorSlot[8].isEmpty && !this.armorSlot[9].isEmpty)
             {
                 
                 if(!this.checkInvFull(1))
                 {
                     let temp = new invSlot();
                     temp.makeCopy(this.inventorySlot[data.index]);
-                    this.inventorySlot[data.index].makeCopy(this.armorSlot[data.slotNumber]);
-                    this.armorSlot[data.slotNumber].makeCopy(temp);
+                    this.inventorySlot[data.index].makeCopy(this.armorSlot[8]);
+                    this.armorSlot[8].makeCopy(temp);
 
                     let freeSpot = this.findEmptySlot();
-                    this.inventorySlot[freeSpot].makeCopy(this.armorSlot[data.slotNumber+1]);
-                    this.armorSlot[data.slotNumber+1].makeEmpty()
+                    this.inventorySlot[freeSpot].makeCopy(this.armorSlot[9]);
+                    this.armorSlot[9].makeEmpty()
                 }
             }
+            
         }
 
         else if(data.type == "single")
@@ -153,12 +166,10 @@ module.exports = class playerInfo{
 
                 }
                 else
-                {
-                    
+                {                   
                     this.armorSlot[data.slotNumber].makeCopy(this.inventorySlot[data.index])
                     this.inventorySlot[data.index].makeEmpty();
-                        
-                    
+                                            
                 }  
             }
 
