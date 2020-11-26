@@ -14,20 +14,6 @@ module.exports = class Player{
         this.modelRotation = new Number(0);
         this.playerInfo = new PlayerInfo();
 
-        //Animation variables
-        this.vert = new Number(0);
-        this.horizl = new Number(0);
-        this.sprinting = false;
-        this.moving = false;
-        this.falling = false;
-        this.landing = false;
-        this.attackKickTrigger = false;
-        this.attackTrigger = false;
-        this.weaponNum = new Number(0);
-        this.leftrght = new Number(0);
-        this.jump = new Number(0);
-        this.actionP = new Number(0);
-        this.rollTrigger = false;
-        this.isInteracting = false;
+        
     } 
 }

@@ -128,26 +128,19 @@ module.exports = class Connection{
         });
 
         socket.on('updateAnimation', function(data){
-           
             let sendData = {
-                id: player.id,
-                vertical: data.vert,
-                horizontal: data.horizl,
-                moving: data.moving,
-                sprinting: data.sprinting,
-                falling: data.falling,
-                landing: data.landing,
-                attackKickTrigger: data.attackKickTrigger,
-                attackTrigger: data.attackTrigger,
-                rollTrigger: data.rollTrigger,
-                weaponNum: data.weaponNum,
-                leftrght: data.leftrght,
-                jump:data.jump,
-                actionP:data.actionP,
-                isInteracting: data.isInteracting
-        
+                id: data.id,
+                playerState: data.playerState,
+                isMoving: data.isMoving,
+                isSprinting: data.isSprinting,
+                isJumping: data.isJumping,
+                isFalling: data.isFalling,
+                isLanding:data.isLanding,
+                verticalY:data.verticalY,
+                horizontalX: data.horizontalX
             }
-                
+            
+                         
                 socket.broadcast.to(connection.lobby.id).emit('updateAnimation', sendData);
             
             
