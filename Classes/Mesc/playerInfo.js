@@ -12,20 +12,20 @@ module.exports = class playerInfo{
         this.inventorySlot = [];
         this.armorSlot =[];
         this.InventoryFull = false;
+        this.inventorySize = new Number(0);
         
         
     }
     updateInventory(connection = Connection)
     {   
         this.InventoryFull = this.checkInvFull(1);
-
         let socket = connection.socket;
         let sendData = {
             id: connection.player.id,
             money: this.coins,
             invFull: this.InventoryFull,
             Inventory: this.inventorySlot,
-            Armor:this.armorSlot
+            Armor: this.armorSlot
         }
         socket.emit('updateInventory', sendData);
     }
@@ -34,7 +34,7 @@ module.exports = class playerInfo{
         this.coins = data.Coins; 
         let dataArr = data.Inventory;
         let dataArmorArr = data.Armor;
- 
+        this.inventorySize = dataArr.length;
         let i;
         
         for(i=0; i< dataArr.length; i++)

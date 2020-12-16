@@ -74,7 +74,8 @@ module.exports = class GameLobby extends LobbyBase{
         let socket = connection.socket;
 
         var returnData = { //Include player stats from on spawn
-            id: connection.player.id
+            id: connection.player.id,
+            invSize: connection.player.playerInfo.inventorySize 
         }
 
         socket.emit('spawn', returnData); //tell myself i have spawned
