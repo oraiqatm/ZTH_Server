@@ -161,5 +161,12 @@ module.exports = class Connection{
             player.playerInfo.equipItem(data, connection);
         });
 
+        socket.on('dropItem', function(data){
+            player.playerInfo.dropItem(data, connection);
+        });
+
+        socket.on('unequipItem', function(data){
+            player.playerInfo.unequipItem(data, connection);
+        });
     }
 }

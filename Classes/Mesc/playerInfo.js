@@ -67,7 +67,7 @@ module.exports = class playerInfo{
         
     }
 
-    checkInvFull(x = Number){
+    checkInvFull(x = Number){ // x is the number of spots we are checking are available
         let i;
         let count = new Number(0);
         for(i=0; i < this.inventorySlot.length; i++)
@@ -84,7 +84,7 @@ module.exports = class playerInfo{
         return true;
     }
 
-    findEmptySlot(slots)
+    findEmptySlot() //find 1st empty slot
     {
         let i;
         for(i=0; i < this.inventorySlot.length; i++)
@@ -181,4 +181,37 @@ module.exports = class playerInfo{
         this.updateInventory(connection);
         
     }
+
+    unequipItem(data, connection = Connection)
+    {
+        if(this.checkInvFull(1))
+        {
+            if(data.type == 'double' || data.type == 'single')
+            {
+                let x = this.findEmptySlot();
+                this.inventorySlot[x].makeCopy(this.armorSlot[data.slotNumber]);
+                this.armorSlot[data.slotNumber].makeEmpty();
+
+            }
+        }
+    }
+
+    dropItem(data, connection = Connection)
+    {
+        if(data.destroyDrop)
+        {
+            this.inventorySlot[data.slotNumber].makeEmpty();
+            this.updateInventory(connection);
+        }
+    }
+
+    sendMessage(note,connection = Connection)
+    {
+        let socket = connection.socket;
+        let sendData = {
+            message: note
+        }
+        socket.emit('communication', sendData);
+    }
+
 };
