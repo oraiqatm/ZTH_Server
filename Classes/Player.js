@@ -7,7 +7,7 @@ module.exports = class Player{
     constructor(){
         this.username = 'Default_Player';
         this.id = shortID.generate();
-        this.playerId = new Number(0);
+        this.playerId = new Number(-1);
         this.lobby = 0;
 
         this.position = new Vector3();

@@ -11,7 +11,7 @@ let server = new Server();
 
 setInterval(()=>{
     server.onUpdate();
-}, 1000, 0);
+}, 100, 0);
 
 
 io.on('connection', function(socket){
