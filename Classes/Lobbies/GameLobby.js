@@ -38,6 +38,7 @@ module.exports = class GameLobby extends LobbyBase{
         let currentPlayerCount = lobby.connections.length;
 
         if(currentPlayerCount + 1> maxPlayerCount){
+            console.log("Current player Count" + currentPlayerCount);
             return false;
         }
 
@@ -73,12 +74,16 @@ module.exports = class GameLobby extends LobbyBase{
         let connections = lobby.connections;
         let socket = connection.socket;
 
-        var returnData = { //Include player stats from on spawn
+        var controllerData = { //Include player stats from on spawn
             id: connection.player.id,
             invSize: connection.player.playerInfo.inventorySize 
         }
 
-        socket.emit('spawn', returnData); //tell myself i have spawned
+        var returnData = {
+            id: connection.player.id
+        }
+
+        socket.emit('spawn', controllerData); //tell myself i have spawned
         socket.broadcast.to(lobby.id).emit('spawn', returnData); //Tell others
 
         //tell myself about everyone else already in the lobby

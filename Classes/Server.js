@@ -19,7 +19,8 @@ module.exports = class Server{
         this.database.GetRespawnItems(result => {  // Getting respawnable items from DB
             this.tempdata = result; 
         })
-        
+
+      
         
     }
 
@@ -87,6 +88,7 @@ module.exports = class Server{
         gameLobbies.forEach(lobby => {
             if(!lobbyFound){
                 let canJoin = lobby.canEnterLobby(connection);
+
 
                 if(canJoin) {
                     lobbyFound = true;

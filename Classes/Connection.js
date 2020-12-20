@@ -18,41 +18,23 @@ module.exports = class Connection{
             let playerFile = './Classes/PlayerStorage/'+ player.playerId +'.json';
             let playerInv = player.playerInfo.inventorySlot;
             let playerArmor = player.playerInfo.armorSlot;
+            
             if(player.playerId != -1)
             {
-                fs.access(playerFile, (err) =>{
-                    if(err){
-                        console.log("The file does not exist")
-                    }else
+                server.database.updatePlayerDB(player.playerId, player.playerInfo.coins,playerInv, playerArmor, results =>{
+                    if(results.valid)
                     {
-                        var m = JSON.parse(fs.readFileSync(playerFile).toString());
-                        let i;
-                        m.Coins = player.playerInfo.coins;
-                        for(i=0; i < m.Inventory.length; i++)
-                        {
-                            m.Inventory[i].name = playerInv[i].name;
-                            m.Inventory[i].id = playerInv[i].id;
-                            m.Inventory[i].amount = playerInv[i].amount;
-                            m.Inventory[i].type = playerInv[i].type;
-                            m.Inventory[i].isEmpty = playerInv[i].isEmpty;
-                        }
-                        
-                        for(i=0; i < m.Armor.length; i++)
-                        {
-                            m.Armor[i].name = playerArmor[i].name;
-                            m.Armor[i].id = playerArmor[i].id;
-                            m.Armor[i].amount = playerArmor[i].amount;
-                            m.Armor[i].type = playerArmor[i].type;
-                            m.Armor[i].isEmpty = playerArmor[i].isEmpty;
-                        }
-                        fs.writeFile(playerFile, JSON.stringify(m), (err) => { // will overrite the file
-                            if(err) console.log(err);
-                        });
+                        server.onDisconnected(connection);
                     }
+                    
                 });
             }
+            else{
+                server.onDisconnected(connection);
+            }
+            
+            
 
-            server.onDisconnected(connection);
         });
 
         socket.on('createAccount', function(data){
@@ -62,16 +44,30 @@ module.exports = class Connection{
                 //Creating the save json file on server
                 if(result.valid){
                     let template = './Classes/PlayerStorage/template.json';
-                    var m = JSON.parse(fs.readFileSync(template).toString()); 
-                    let makeDir1 = './Classes/PlayerStorage/'+ result.id +'.json';
-                    fs.writeFile(makeDir1, JSON.stringify(m), (err) => { // will overrite the file
-                        if(err) console.log(err);
+                    var m = JSON.parse(fs.readFileSync(template).toString());
+                    var createTableQuery = "CREATE TABLE player" + result.id + m.createQuery;
+                    
+
+                    
+                    let newPlayerId = result.id;
+                    server.database.CreatePlayerInfo(createTableQuery, result =>{
+                        if(result.valid)
+                        {
+                           console.log("New table created for player" + newPlayerId);
+    
+                           server.database.initializePlayerInfo(newPlayerId, m.Coins,m.Inventory, m.Armor, out =>{
+                                console.log("Player" + newPlayerId +" table has been initialized.");
+                                socket.emit('accountCreated');
+    
+                           });
+                        }
                     });
-                    console.log("File: " + result.id +".json was created on server.");
                 }
                 
             });
+
         });
+
         socket.on('signIn', function(data){
             server.database.SignIn(data.username, data.password, results =>{
               
@@ -81,16 +77,21 @@ module.exports = class Connection{
                 {
                     
                     player.playerId = results.id;
-                    let playerFile = './Classes/PlayerStorage/'+ results.id +'.json';
-                    fs.access(playerFile, (err) =>{
-                        if(err){
-                            console.log("The file does not exist")
-                        }else{
-                            var m = JSON.parse(fs.readFileSync(playerFile).toString());
-                            player.playerInfo.generateInventory(m);
-                            socket.emit('signIn');
-                        }
+                    server.database.getInventory(player.playerId,results =>{
+                        let temp = results.Inventory
+                        server.database.getArmor(player.playerId, out =>{
+                            let armtemp = out.Armor;
+                            server.database.getCurrency(player.playerId, o =>{
+                                let ctemp = o.Coins;
+                                player.playerInfo.generateProfile(temp, armtemp, ctemp);
+                                socket.emit('signIn');
+
+                            });
+                            
+                        });
                     });
+                    
+                   
                     
                 }
             });

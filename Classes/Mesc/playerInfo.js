@@ -27,28 +27,32 @@ module.exports = class playerInfo{
             Inventory: this.inventorySlot,
             Armor: this.armorSlot
         }
+       
         socket.emit('updateInventory', sendData);
     }
-    generateInventory(data)
+    
+
+    generateProfile(dataInv, dataArmor, dataCurrency)
     {
-        this.coins = data.Coins; 
-        let dataArr = data.Inventory;
-        let dataArmorArr = data.Armor;
-        this.inventorySize = dataArr.length;
+        this.coins = dataCurrency[0].Currency; 
+        console.log(dataArmor.length);
+        this.inventorySize = dataInv.length;
         let i;
         
-        for(i=0; i< dataArr.length; i++)
+        for(i=0; i< dataInv.length; i++)
         {
-            let tempSlot = new invSlot(dataArr[i].name, dataArr[i].id, dataArr[i].amount, dataArr[i].type, dataArr[i].isEmpty);
+            let tempSlot = new invSlot(dataInv[i].InvName, dataInv[i].InvID, dataInv[i].InvAmnt, dataInv[i].InvType, dataInv[i].InvEmpty);
+
             this.inventorySlot.push(tempSlot)
-        } 
-        for(i=0; i< dataArmorArr.length; i++)
+        }
+        for(i=0; i< dataArmor.length; i++)
         {
-            let tempSlot1 = new invSlot(dataArmorArr[i].name, dataArmorArr[i].id, dataArmorArr[i].amount, dataArmorArr[i].type,dataArmorArr[i].isEmpty);
+            let tempSlot1 = new invSlot(dataArmor[i].ArmorName, dataArmor[i].ArmorID, dataArmor[i].ArmorAmnt, dataArmor[i].ArmorType,dataArmor[i].ArmorEmpty);
+
             this.armorSlot.push(tempSlot1)
-        } 
-             
+        }  
         
+
     }
 
     addToInventory(data, connection = Connection)
