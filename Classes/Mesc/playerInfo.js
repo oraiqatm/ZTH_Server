@@ -188,14 +188,20 @@ module.exports = class playerInfo{
 
     unequipItem(data, connection = Connection)
     {
-        if(this.checkInvFull(1))
+        console.log("unequip called");
+        if(!this.checkInvFull(1))
         {
+            console.log("inventory not full");
+
             if(data.type == 'double' || data.type == 'single')
             {
+                console.log("type is valid");
+
                 let x = this.findEmptySlot();
                 this.inventorySlot[x].makeCopy(this.armorSlot[data.slotNumber]);
                 this.armorSlot[data.slotNumber].makeEmpty();
-
+                
+                this.updateInventory(connection);
             }
         }
     }
