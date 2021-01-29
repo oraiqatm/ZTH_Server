@@ -139,9 +139,13 @@ module.exports = class Connection{
                 isFalling: data.isFalling,
                 isLanding:data.isLanding,
                 verticalY:data.verticalY,
-                horizontalX: data.horizontalX
+                horizontalX: data.horizontalX,
+                attackAction: data.attackAction,
+                handAttackTrig: data.HandAttackTrig,
+                legAttackTrig: data.LegAttackTrig
+
             }
-            
+               // console.log(data.LegAttackTrig);
                          
                 socket.broadcast.to(connection.lobby.id).emit('updateAnimation', sendData);
             
