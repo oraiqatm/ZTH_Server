@@ -9,7 +9,7 @@ module.exports = class Player{
         this.id = shortID.generate();
         this.playerId = new Number(-1);
         this.lobby = 0;
-
+        this.isOnline = false;
         this.position = new Vector3();
         this.modelRotation = new Number(0);
         this.playerInfo = new PlayerInfo();

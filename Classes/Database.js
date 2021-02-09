@@ -130,8 +130,6 @@ module.exports = class Database{
 
     SignIn(username, password, callback){
       
-       
-
         this.Connect(connection=>{
             let query = "SELECT password , id FROM player WHERE username = ?";
             connection.query(query, [username], (error, results) => {
@@ -145,7 +143,8 @@ module.exports = class Database{
                         callback({
                             id: results[0].id,
                             valid: true,
-                            reason: "Success"
+                            reason: "Success",
+                            username: username //local variable of this function
                         });
                     }else{
                         //dont return this or youll get botted.

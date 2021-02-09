@@ -77,6 +77,7 @@ module.exports = class Connection{
                 {
                     
                     player.playerId = results.id;
+                    player.username = results.username;
                     server.database.getInventory(player.playerId,results =>{
                         let temp = results.Inventory
                         server.database.getArmor(player.playerId, out =>{
@@ -173,6 +174,10 @@ module.exports = class Connection{
 
         socket.on('unequipItem', function(data){
             player.playerInfo.unequipItem(data, connection);
+        });
+
+        socket.on('updateGameChat', function(data){
+           connection.lobby.handGameChatMessaging(connection, data);
         });
     }
 }

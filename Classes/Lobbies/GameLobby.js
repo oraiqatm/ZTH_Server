@@ -76,13 +76,15 @@ module.exports = class GameLobby extends LobbyBase{
 
         var controllerData = { //Include player stats from on spawn
             id: connection.player.id,
-            invSize: connection.player.playerInfo.inventorySize 
+            invSize: connection.player.playerInfo.inventorySize,
+            userName: connection.player.username 
         }
 
         var returnData = {
-            id: connection.player.id
+            id: connection.player.id,
+            userName: connection.player.username
         }
-
+      
         socket.emit('spawn', controllerData); //tell myself i have spawned
         socket.broadcast.to(lobby.id).emit('spawn', returnData); //Tell others
 
@@ -91,10 +93,11 @@ module.exports = class GameLobby extends LobbyBase{
         connections.forEach(c => {
             if(c.player.id != connection.player.id){
                 socket.emit('spawn', {
-                    id: c.player.id
+                    id: c.player.id,
+                    userName: c.player.username
                 });
             }
-        })
+        });
     }
 
     removePlayer(connection = Connection){
@@ -120,6 +123,22 @@ module.exports = class GameLobby extends LobbyBase{
     }
     
     //--------------------------------------Game Engine to Server -----------------------------------------------------------------------
+
+    handGameChatMessaging(connection, data)
+    {
+        let lobby = this;
+        let connections = lobby.connections;
+        let sendData = {
+            username: connection.player.username, 
+            message: data.message,
+            type: data.type
+        }
+
+        this.connections.forEach(c=>{
+            c.socket.emit('updateGameChat', sendData);
+        });
+
+    }
 
 
     //--------------------------------------Utilities functions ---------------------------------------------------------------------------
