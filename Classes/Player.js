@@ -14,6 +14,10 @@ module.exports = class Player{
         this.modelRotation = new Number(0);
         this.playerInfo = new PlayerInfo();
 
+        //Hosting some enemys
+        this.hostingEnemy = false;
+        this.enemysHosted = [];
+        
         
     } 
 }

@@ -1,12 +1,12 @@
 let Connection = require('../Connection');
 let LobbyObjects = require('../LobbyObjects');
 const ServerObject = require('../Mesc/serverObject');
-
+const basicEnemy = require('../AI/basicEnemy');
 let LobbyBase = require('./LobbyBase');
 let GameLobbySettings = require('./GameLobbySettings');
+const NPC_Manager = require('../AI/NPC_Manager');
 
-//Test
-let fs = require('fs');
+
 
 
 module.exports = class GameLobby extends LobbyBase{
@@ -17,7 +17,9 @@ module.exports = class GameLobby extends LobbyBase{
         //Server Spawning items when logging in.
         this.Objects = new LobbyObjects();
         this.Objects.ServerRespawnObjects = this.convertSO(items);
-       
+        this.NpcManager = new NPC_Manager();
+        this.NpcManager.initializeEnemies(100);
+        
         this.runOnce = true;
     }
 
@@ -26,8 +28,6 @@ module.exports = class GameLobby extends LobbyBase{
         if(this.connections.length >0){
             this.respawnObjects();
         }
-        
-       
         
 
     }
@@ -51,10 +51,12 @@ module.exports = class GameLobby extends LobbyBase{
         let player = connection.player;
         super.onEnterLobby(connection);
 
-        this.Intialize(connection); 
+        this.Intialize(connection);
+        //spawn AI
+        
         lobby.addPlayer(connection);
-
         socket.emit('loadGame');
+
         
       
     }
@@ -64,9 +66,7 @@ module.exports = class GameLobby extends LobbyBase{
         super.onLeaveLobby(connection);
         lobby.removePlayer(connection);
 
-        //Handle unspawning any server spawned objects here
-        //Example: Loot, perhaps flying bullets etc.
-
+       
     }
 
     addPlayer(connection = Connection){
@@ -111,16 +111,25 @@ module.exports = class GameLobby extends LobbyBase{
 
     Intialize(connection = Connection){
         let lobby = this;
-        let respawnObjects = lobby.Objects.ServerRespawnObjects; 
+        if(this.connections.length == 1)
+        {
+            this.NpcManager.runOnce = true;
+        }
 
+        //Respawn Object from the database
+        let respawnObjects = lobby.Objects.ServerRespawnObjects; 
         if(respawnObjects.length > 0){
             let i; 
             for (i = 0; i < respawnObjects.length; i++){
                 this.spawnObjects(connection, respawnObjects[i]);
             }
         }
+        
 
     }
+
+  
+
     
     //--------------------------------------Game Engine to Server -----------------------------------------------------------------------
 
@@ -140,6 +149,49 @@ module.exports = class GameLobby extends LobbyBase{
 
     }
 
+    SetAIDestination(connection = Connection, data)
+    {
+        let lobby = this;
+
+        let sendData = {
+            id: data.id,
+            destination: {
+                x: data.destination.x,
+                y: data.destination.y,
+                z: data.destination.z
+            }
+        }
+        connection.socket.broadcast.to(lobby.id).emit('SetAIDestination', sendData);
+    }
+
+    updateAIPosition(connection = Connection, data)
+    {
+        let lobby = this;
+
+        let sendData = {
+            id : data.id,
+            position: {
+                x: data.pos.x,
+                y: data.pos.y,
+                z: data.pos.z
+            }
+        }
+
+        connection.socket.broadcast.to(lobby.id).emit('updateAIPosition', sendData);
+      
+
+    }
+
+    updateAIRotation(connection = Connection, data)
+    {
+        let lobby = this;
+        let sendData = {
+            id : data.id,
+            rotation: data.modelRotation
+        }
+
+        connection.socket.broadcast.to(lobby.id).emit('updateAIRotation', sendData);
+    }
 
     //--------------------------------------Utilities functions ---------------------------------------------------------------------------
     convertSO(items){
@@ -208,8 +260,46 @@ module.exports = class GameLobby extends LobbyBase{
         })
     }
 
-    loadPlayerInfo(){
-        
+    spawnAllNPCs(connection = Connection)
+    {
+        this.NpcManager.spawnAllEnemies(connection);
     }
+
+    makeNewConnectionHost(connection = Connection)
+    {
+        //Called right before disconnect in "Connection.js"
+        let lobby = this;
+        let connections = lobby.connections;
+        let enemiesID = connection.player.enemysHosted;
+    
+        for(let i=0; i < connections.length; i++)
+        {
+            if(connection.player.id != connections[i].player.id)
+            {
+                
+                connections[i].player.hostingEnemy = true;
+                connections[i].enemysHosted = enemiesID;
+                
+                console.log("Player" + connections[i].player.id + " is hosting enemies");
+                enemiesID.forEach(enemyid =>{
+                    let sendData = {
+                        id: enemyid
+                    }
+
+                    connections[i].socket.emit('updateEnemyHost', sendData);
+                    console.log("updated host enemy" + sendData);
+                });
+                console.log("Connections in lobby: ");
+                connections.forEach(c=>{
+                    console.log(c.player.id);
+                })
+                return;
+
+            }
+        }
+
+    }
+
+   
 
 }

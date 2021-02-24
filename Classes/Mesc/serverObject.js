@@ -12,8 +12,8 @@ module.exports = class ServerObject{
 
         this.canRespawn = false;
         this.destroyed = false;
+        
         this.itemRespawnTime = new Number(3);
-
         this.respawnTicker = new Number(0);
         this.respawnTime = new Number(0);
     }

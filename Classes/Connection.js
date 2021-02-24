@@ -24,14 +24,22 @@ module.exports = class Connection{
                 server.database.updatePlayerDB(player.playerId, player.playerInfo.coins,playerInv, playerArmor, results =>{
                     if(results.valid)
                     {
+                        if(player.hostingEnemy)
+                        {
+                            connection.lobby.makeNewConnectionHost(connection, player.enemyHosted);  
+                        }
                         server.onDisconnected(connection);
                     }
                     
                 });
             }
             else{
+                if(player.hostingEnemy)
+                {
+                    connection.lobby.makeNewConnectionHost(connection);  
+                }
                 server.onDisconnected(connection);
-            }
+            }//updated the players database for storage
             
             
 
@@ -101,6 +109,11 @@ module.exports = class Connection{
         socket.on('joinGame', function(){
             server.onAttemptToJoinGame(connection);
         });
+
+        socket.on('spawnNPCS', function(){ //Sent from client
+            
+            connection.lobby.spawnAllNPCs(connection);
+        })
 
         socket.on('updatePosition', function(data){
             
@@ -178,6 +191,18 @@ module.exports = class Connection{
 
         socket.on('updateGameChat', function(data){
            connection.lobby.handGameChatMessaging(connection, data);
+        });
+
+        socket.on('SetAIDestination', function(data){
+            connection.lobby.SetAIDestination(connection, data);
+        });
+
+        socket.on('updateAIPosition', function(data){
+            connection.lobby.updateAIPosition(connection, data);
+        });
+     
+        socket.on('updateAIRotation', function(data){
+            connection.lobby.updateAIRotation(connection, data);
         });
     }
 }
