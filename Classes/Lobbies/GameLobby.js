@@ -148,20 +148,7 @@ module.exports = class GameLobby extends LobbyBase{
 
     }
 
-    SetAIDestination(connection = Connection, data)
-    {
-        let lobby = this;
-
-        let sendData = {
-            id: data.id,
-            destination: {
-                x: data.destination.x,
-                y: data.destination.y,
-                z: data.destination.z
-            }
-        }
-        connection.socket.broadcast.to(lobby.id).emit('SetAIDestination', sendData);
-    }
+    
 
     updateAIPosition(connection = Connection, data)
     {

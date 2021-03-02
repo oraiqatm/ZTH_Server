@@ -193,10 +193,6 @@ module.exports = class Connection{
            connection.lobby.handGameChatMessaging(connection, data);
         });
 
-        socket.on('SetAIDestination', function(data){
-            connection.lobby.SetAIDestination(connection, data);
-        });
-
         socket.on('updateAIPosition', function(data){
             connection.lobby.updateAIPosition(connection, data);
         });
