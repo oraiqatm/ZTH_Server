@@ -10,7 +10,8 @@ module.exports = class Database{
             host: this.currentSetting.Host,
             user: this.currentSetting.Username,
             password: this.currentSetting.Password,
-            database:this.currentSetting.Database
+            database:this.currentSetting.Database,
+            acquireTimeout:1000000
         });
         this.numberOfPlayers = new Number(0);
     }
@@ -19,7 +20,6 @@ module.exports = class Database{
         let pool = this.pool;
         pool.getConnection((error, connection) =>{
             if(error) throw error;
-            console.log("DB made connection")
             callback(connection);
         });
     }

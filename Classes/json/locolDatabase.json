@@ -1,6 +1,6 @@
 {
-    "Host": "local",
+    "Host": "localhost",
     "username": "root",
-    "password": "",
-    "Database": ""
+    "password": "hello123",
+    "Database": "gamedb"
 }

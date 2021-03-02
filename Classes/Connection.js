@@ -175,6 +175,7 @@ module.exports = class Connection{
 
         socket.on('updateInventory', function(){
             player.playerInfo.updateInventory(connection);
+           
         });
 
         socket.on('equipItem', function(data){

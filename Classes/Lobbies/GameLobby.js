@@ -179,6 +179,8 @@ module.exports = class GameLobby extends LobbyBase{
         connection.socket.broadcast.to(lobby.id).emit('updateAIRotation', sendData);
     }
 
+   
+
     //--------------------------------------Utilities functions ---------------------------------------------------------------------------
     convertSO(items){
         let arr = [];
