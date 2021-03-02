@@ -18,7 +18,7 @@ module.exports = class GameLobby extends LobbyBase{
         this.Objects = new LobbyObjects();
         this.Objects.ServerRespawnObjects = this.convertSO(items);
         this.NpcManager = new NPC_Manager();
-        this.NpcManager.initializeEnemies(100);
+        this.NpcManager.initializeEnemies(2);
         
         this.runOnce = true;
     }
@@ -28,7 +28,6 @@ module.exports = class GameLobby extends LobbyBase{
         if(this.connections.length >0){
             this.respawnObjects();
         }
-        
 
     }
 

@@ -19,6 +19,7 @@ module.exports = class Database{
         let pool = this.pool;
         pool.getConnection((error, connection) =>{
             if(error) throw error;
+            console.log("DB made connection")
             callback(connection);
         });
     }
@@ -29,7 +30,7 @@ module.exports = class Database{
             connection.query(query,(error, results)=>{
                 connection.release();
                 if(error) throw error;
-                this.numberOfPlayers = results[0].num; 
+                this.d = results[0].num; 
             })
         });
     }
@@ -251,7 +252,6 @@ module.exports = class Database{
         });
     }
     
-
 
     getInventory(playerId, callback)
     {

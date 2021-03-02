@@ -3,6 +3,7 @@ const basicEnemy = require("./basicEnemy");
 module.exports = class NPC_Manager {
     constructor(){
         this.enemies = []; 
+        this.enemiesToRespawn = [];
         this.runOnce = true;
     }
 
