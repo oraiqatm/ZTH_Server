@@ -17,10 +17,12 @@ module.exports = class GameLobby extends LobbyBase{
         //Server Spawning items when logging in.
         this.Objects = new LobbyObjects();
         this.Objects.ServerRespawnObjects = this.convertSO(items);
+
         this.NpcManager = new NPC_Manager();
-        this.NpcManager.initializeEnemies(2);
+        this.NpcManager.initializeEnemies('MonsterCube',2);
         
         this.runOnce = true;
+        
     }
 
     onUpdate(){
@@ -153,30 +155,36 @@ module.exports = class GameLobby extends LobbyBase{
     updateAIPosition(connection = Connection, data)
     {
         let lobby = this;
-
-        let sendData = {
-            id : data.id,
-            position: {
-                x: data.pos.x,
-                y: data.pos.y,
-                z: data.pos.z
+        if(this.NpcManager.enemiesReady)
+        {
+            let sendData = {
+                id : data.id,
+                position: {
+                    x: data.pos.x,
+                    y: data.pos.y,
+                    z: data.pos.z
+                }
             }
+    
+            connection.socket.broadcast.to(lobby.id).emit('updateAIPosition', sendData);
         }
-
-        connection.socket.broadcast.to(lobby.id).emit('updateAIPosition', sendData);
+        
       
 
     }
 
     updateAIRotation(connection = Connection, data)
     {
-        let lobby = this;
-        let sendData = {
-            id : data.id,
-            rotation: data.modelRotation
-        }
+        if(this.NpcManager.enemiesReady)
+        {
+            let lobby = this;
+            let sendData = {
+                id : data.id,
+                rotation: data.modelRotation
+            }
 
-        connection.socket.broadcast.to(lobby.id).emit('updateAIRotation', sendData);
+            connection.socket.broadcast.to(lobby.id).emit('updateAIRotation', sendData);
+        }
     }
 
    

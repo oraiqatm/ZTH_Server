@@ -5,23 +5,24 @@ module.exports = class NPC_Manager {
         this.enemies = []; 
         this.enemiesToRespawn = [];
         this.runOnce = true;
+        this.enemiesReady = false;
     }
 
 
-    initializeEnemies(numofCubes)
+    initializeEnemies(nameofNPC,numofCubes)
     {
         //these monster will never be removed from enemies once init
         //will run when gamelobby is created
         for(let i=0; i < numofCubes; i++)
         {
             let newCube = new basicEnemy();
-            newCube.name = 'MonsterCube'; 
+            newCube.name = nameofNPC; 
             newCube.Health = 100;
             newCube.dead = false;
             this.enemies.push(newCube);
         }
 
-
+        
     }
 
     spawnAllEnemies(connection = Connection)
@@ -57,7 +58,7 @@ module.exports = class NPC_Manager {
                 connection.socket.emit('spawnAI', sendData);
               
             });
-     
+            this.enemiesReady = true;
         }
         
     }
