@@ -19,9 +19,6 @@ module.exports = class Server{
         this.database.GetRespawnItems(result => {  // Getting respawnable items from DB
             this.tempdata = result; 
         })
-
-      
-        
     }
 
     onUpdate(){

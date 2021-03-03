@@ -1,6 +1,6 @@
 {
-    "Host": "us-cdbr-east-02.cleardb.com",
-    "Username": "bdb289e245f973",
-    "Password": "5e2e7df8",
-    "Database": "heroku_3b13448ad25ce84"
+    "Host": "us-cdbr-east-03.cleardb.com",
+    "Username": "b5138fc3e62c69",
+    "Password": "dfc83e69",
+    "Database": "heroku_d8eeeb9d3096545"
 }
