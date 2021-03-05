@@ -175,13 +175,14 @@ module.exports = class Database{
         })
     }
 
-    initializePlayerInfo(playerId, currency, inventorySlots, armorSlots, callback)//Call on CreateUser
+    initializePlayerInfo(playerId, currency, inventorySlots, armorSlots, scene,callback)//Call on CreateUser
     {
         
         this.Connect(connection => {
             var invQuery = "INSERT IGNORE INTO player" + playerId + " (ind, InvName, InvID, InvAmnt, InvType, InvEmpty ) VALUES (?,?, ?, ?, ?, ?)";
             var armorQuery = "UPDATE player" + playerId + " SET ArmorName = ?, ArmorID =?, ArmorAmnt =?, ArmorType =?, ArmorEmpty =? WHERE ind =?";
             var currencyQuery = "UPDATE player" + playerId + " SET Currency =? WHERE ind =?";
+            var sceneQuery = "UPDATE player" + playerId + " Set Scene =? WHERE ind =?";
 
             let i =0; 
             
@@ -206,6 +207,10 @@ module.exports = class Database{
  
             connection.query(currencyQuery,[currency, 1], (error, results) => {
                 if(error) throw error             
+            });
+
+            connection.query(sceneQuery,[scene, 1], (error, results) => {
+                if(error) throw error             
                 callback({valid: true})
             });
             connection.release();
@@ -213,13 +218,14 @@ module.exports = class Database{
         });
     }
 
-    updatePlayerDB(playerId, currency, inventorySlots, armorSlots, callback)//Call on disconnect
+    updatePlayerDB(playerId, currency, inventorySlots, armorSlots, scene, callback)//Call on disconnect
     {
        
         this.Connect(connection => {
             var invQuery = "UPDATE player" + playerId + " SET InvName = ?, InvID =?, InvAmnt=?, InvType=?, InvEmpty=? WHERE ind = ?";
             var armorQuery = "UPDATE player" + playerId + " SET ArmorName = ?, ArmorID =?, ArmorAmnt =?, ArmorType =?, ArmorEmpty =? WHERE ind =?";
             var currencyQuery = "UPDATE player" + playerId + " SET Currency =? WHERE ind =?";
+            var sceneQuery = "UPDATE player" + playerId + " Set Scene =? WHERE ind =?";
 
             let i =1; 
             
@@ -244,6 +250,10 @@ module.exports = class Database{
             }
 
             connection.query(currencyQuery,[currency, 1], (error, results) => {
+                if(error) throw error             
+                
+            });
+            connection.query(sceneQuery,[scene, 1], (error, results) => {
                 if(error) throw error             
                 callback({valid: true})
             });
@@ -290,6 +300,19 @@ module.exports = class Database{
                 if(error) throw error
                 connection.release();
                 callback({Coins:items});
+
+            });
+        });
+    }
+
+    getScene(playerId, callback)
+    {
+        this.Connect(connection =>{
+            let query = "Select Scene FROM player" + playerId + " WHERE ind= 1";
+            connection.query(query, (error, items) => {
+                if(error) throw error
+                connection.release();
+                callback({Scene:items});
 
             });
         });

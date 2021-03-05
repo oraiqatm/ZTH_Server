@@ -12,6 +12,11 @@ module.exports = class basicEnemy extends BaseAI
 
     }
 
+    OnUpdate()
+    {
+
+    }
+    
     setTarget(playerId)
     {
         this.target= playerId;

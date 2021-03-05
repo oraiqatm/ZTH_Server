@@ -18,10 +18,11 @@ module.exports = class Connection{
             let playerFile = './Classes/PlayerStorage/'+ player.playerId +'.json';
             let playerInv = player.playerInfo.inventorySlot;
             let playerArmor = player.playerInfo.armorSlot;
+            let playerScene = player.playerInfo.currentScene;
             
             if(player.playerId != -1)
             {
-                server.database.updatePlayerDB(player.playerId, player.playerInfo.coins,playerInv, playerArmor, results =>{
+                server.database.updatePlayerDB(player.playerId, player.playerInfo.coins,playerInv, playerArmor, playerScene, results =>{
                     if(results.valid)
                     {
                         if(player.hostingEnemy)
@@ -63,7 +64,7 @@ module.exports = class Connection{
                         {
                            console.log("New table created for player" + newPlayerId);
     
-                           server.database.initializePlayerInfo(newPlayerId, m.Coins,m.Inventory, m.Armor, out =>{
+                           server.database.initializePlayerInfo(newPlayerId, m.Coins,m.Inventory, m.Armor, m.Scene ,out =>{
                                 console.log("Player" + newPlayerId +" table has been initialized.");
                                 socket.emit('accountCreated');
     
@@ -92,8 +93,12 @@ module.exports = class Connection{
                             let armtemp = out.Armor;
                             server.database.getCurrency(player.playerId, o =>{
                                 let ctemp = o.Coins;
-                                player.playerInfo.generateProfile(temp, armtemp, ctemp);
-                                socket.emit('signIn');
+                                server.database.getScene(player.playerId, sceneOut =>{
+                                    let scene = sceneOut.Scene;
+                                    player.playerInfo.generateProfile(temp, armtemp, ctemp,scene);
+                                    socket.emit('signIn');
+                                })
+                                
 
                             });
                             

@@ -13,6 +13,7 @@ module.exports = class playerInfo{
         this.armorSlot =[];
         this.InventoryFull = false;
         this.inventorySize = new Number(0);
+        this.currentScene = "";
         
         
     }
@@ -32,7 +33,7 @@ module.exports = class playerInfo{
     }
     
 
-    generateProfile(dataInv, dataArmor, dataCurrency)
+    generateProfile(dataInv, dataArmor, dataCurrency, currentScene)
     {
         this.coins = dataCurrency[0].Currency; 
         console.log(dataArmor.length);
@@ -52,7 +53,7 @@ module.exports = class playerInfo{
             this.armorSlot.push(tempSlot1)
         }  
         
-
+        this.currentScene = currentScene;
     }
 
     addToInventory(data, connection = Connection)
