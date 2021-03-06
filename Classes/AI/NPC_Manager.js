@@ -2,24 +2,25 @@ const Connection = require("../Connection");
 const basicEnemy = require("./basicEnemy");
 module.exports = class NPC_Manager {
     constructor(){
-        this.enemies = []; 
+        this.npcs = []; 
         this.enemiesToRespawn = [];
         this.runOnce = true;
         this.enemiesReady = false;
     }
 
 
-    initializeEnemies(nameofNPC,numofCubes)
+    initializeEnemies(nameofNPC,amnt)
     {
         //these monster will never be removed from enemies once init
         //will run when gamelobby is created
-        for(let i=0; i < numofCubes; i++)
+        for(let i=0; i < amnt; i++)
         {
             let newCube = new basicEnemy();
             newCube.name = nameofNPC; 
             newCube.Health = 100;
             newCube.dead = false;
-            this.enemies.push(newCube);
+            let arrId = newCube.id;
+            this.npcs.push({id:arrId, ai:newCube});
         }
 
         
@@ -34,14 +35,15 @@ module.exports = class NPC_Manager {
         {
             
             let player = connection.player;
-            this.enemies.forEach(enemy =>{
+            this.npcs.forEach(npc =>{
                 let sendData = {
-                    id: enemy.id,
-                    name: enemy.name,
+                    id: npc.ai.id,
+                    name: npc.ai.name,
                     isHost: true
                 }
                 connection.socket.emit('spawnAI', sendData);
-                player.enemysHosted.push(enemy.id);
+                npc.ai.connectionHostingMe = player.id;
+                player.enemysHosted.push(npc.ai.id);
                 
             });
             player.hostingEnemy = true;
@@ -49,10 +51,10 @@ module.exports = class NPC_Manager {
         }
         else{
 
-            this.enemies.forEach(enemy =>{
+            this.npcs.forEach(npc =>{
                 let sendData = {
-                    id: enemy.id,
-                    name: enemy.name,
+                    id: npc.ai.id,
+                    name: npc.ai.name,
                     isHost: false
                 }
                 connection.socket.emit('spawnAI', sendData);

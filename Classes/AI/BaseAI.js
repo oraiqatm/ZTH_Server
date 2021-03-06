@@ -12,9 +12,9 @@ module.exports = class BaseAI
         this.purpose = 'NPC';
         this.Interactable = false;
         this.id = shortID.generate();
+        this.connectionHostingMe= "";
         
-        this.position = new Vector3();
-        this.modelRotation = new Number(0);
+
         this.currentState = 'idle';
 
         //Respawn stuff
