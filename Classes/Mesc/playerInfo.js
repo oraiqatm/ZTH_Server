@@ -5,7 +5,7 @@ let Connection = require("../Connection");
 let fs = require('fs');
 
 
-module.exports = class playerInfo{
+module.exports = class playerInfo{ //INVENTORY 
     constructor()
     {
         this.coins = new Number(0);

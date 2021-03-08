@@ -1,6 +1,7 @@
 var shortID = require('shortid');
 var Vector3 = require('./Vector3.js');
 let PlayerInfo = require('./Mesc/playerInfo');
+let Stats = require('./Mesc/Stats');
 
 
 module.exports = class Player{
@@ -12,7 +13,10 @@ module.exports = class Player{
         this.isOnline = false;
         this.position = new Vector3();
         this.modelRotation = new Number(0);
-        this.playerInfo = new PlayerInfo();
+
+        this.playerInfo = new PlayerInfo(); //INVENTORY
+        this.playerStats = new Stats(); //PLAYER STATS
+       
 
         //Hosting some enemys
         this.hostingEnemy = false;
