@@ -7,7 +7,8 @@ module.exports = class basicEnemy extends BaseAI
     {
         super();
         this.maxHealth = 100;
-        this.Health = this.maxHealth;
+        this.currentHealth = this.maxHealth;
+
         this.dead = false;
         this.target = "";
 
@@ -25,18 +26,18 @@ module.exports = class basicEnemy extends BaseAI
     }
 
 
-    takeDamage( _damage)
+    takeDamage(connection, _damage)
     {
         let temp = new Number(0);
-        temp = this.health -  _damage; 
-        if(this.health > _damage)
+        temp = this.currentHealth -  _damage; 
+        if(this.currentHealth > _damage)
         {
-            this.health = temp;
+            this.currentHealth = temp;
             
         }
         else 
         {
-            this.health = 0;
+            this.currentHealth = 0;
         }
     }
 

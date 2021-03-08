@@ -198,13 +198,18 @@ module.exports = class Connection{
         socket.on('updateGameChat', function(data){
            connection.lobby.handGameChatMessaging(connection, data);
         });
-
+//----------------------------------NPC -----------------------------------
         socket.on('updateAIPosition', function(data){
             connection.lobby.updateAIPosition(connection, data);
         });
      
         socket.on('updateAIRotation', function(data){
             connection.lobby.updateAIRotation(connection, data);
+        });
+
+        socket.on('updateEnemyStats', function(data)
+        {
+            connection.lobby.NpcManager.updateEnemyStats(connection,data);
         });
     }
 }

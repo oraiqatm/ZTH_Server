@@ -16,9 +16,11 @@ module.exports = class NPC_Manager {
         for(let i=0; i < amnt; i++)
         {
             let newCube = new basicEnemy();
-            newCube.name = nameofNPC; 
+            newCube.name = nameofNPC;
+            newCube.maxHealth = 100; 
             newCube.Health = 100;
             newCube.dead = false;
+            newCube.target = 'empty';
             let arrId = newCube.id;
             this.npcs.push({id:arrId, ai:newCube});
         }
@@ -63,6 +65,30 @@ module.exports = class NPC_Manager {
             this.enemiesReady = true;
         }
         
+    }
+
+    setEnemyTarget(npcId,playerId)
+    {
+        let enemy = this.npcs.find(x => x.id === npcId);
+        enemy.target = playerId;
+    }
+
+    updateEnemyStats(connection = Connection, data)
+    {
+        let lobby = connection.lobby;
+        let enemy = this.npcs.find(x => x.id === data.id);
+        
+        let sendData = {
+            id: enemy.ai.id,
+            maxHealth: enemy.ai.maxHealth,
+            health: enemy.ai.currentHealth,
+            target : enemy.ai.target
+        }
+        console.log('UPDATED ENEMEY STATS: ' + sendData.id +" " + sendData.maxHealth);
+        let connections = lobby.connections;
+        connections.forEach(c =>{
+            c.socket.emit('updateEnemyStats', sendData);
+        })
     }
    
 }

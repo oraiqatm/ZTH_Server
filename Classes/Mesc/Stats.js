@@ -6,7 +6,7 @@ module.exports = class Stats
 
         this.level = new Number(0);
         this.maxHealth = new Number(100);
-        this.currentHealth = new Number(100);
+        this.currentHealth = this.maxHealth;
         this.stamina = new Number(100);
 
         this.attackLevel = new Number(1);
