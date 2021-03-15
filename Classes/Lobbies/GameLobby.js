@@ -177,7 +177,6 @@ module.exports = class GameLobby extends LobbyBase{
                 }
                 else 
                 {
-                    
                     target.actor.ai.takeDamage(lobby, 10);
                 }
             }
