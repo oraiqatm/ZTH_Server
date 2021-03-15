@@ -160,9 +160,9 @@ module.exports = class GameLobby extends LobbyBase{
         {
             let damage = data.damage;
             if(target !=undefined){
-                if(target.type == 0) //if target is a player
+                if(target.type == 0) //if target is the connection player only
                 {  
-                    target.actor.playerStats.takeDamage(connection, damage);
+                    target.actor.playerStats.takeDamage(connection, damage, targetId);
                 }
             }
         }
@@ -170,9 +170,10 @@ module.exports = class GameLobby extends LobbyBase{
         {
             if(target !=undefined)
             {
-                if(target.type == 0)
+                if(target.type == 0) //target can be any player in the lobby
                 {
-                    target.actor.playerStats.takeDamage(connection, 10);
+                    let targetId = target.actor.id;
+                    target.actor.playerStats.takeDamage(connection, 10, targetId);
                 }
                 else 
                 {
