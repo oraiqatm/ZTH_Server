@@ -22,6 +22,7 @@ module.exports = class GameLobby extends LobbyBase{
         this.NpcManager.initializeEnemies('MonsterCube',2);
         
         this.runOnce = true;
+        this.pvp = true;
         
     }
 
@@ -150,7 +151,37 @@ module.exports = class GameLobby extends LobbyBase{
 
     }
 
-    
+    handleTriggerCollider(connection, data)
+    {
+        let lobby = this;
+        let type = data.triggerType;
+        let target = this.findTarget(data);
+        if(type =='env')
+        {
+            let damage = data.damage;
+            if(target !=undefined){
+                if(target.type == 0) //if target is a player
+                {  
+                    target.actor.playerStats.takeDamage(connection, damage);
+                }
+            }
+        }
+        else if (type == 'playerWeapon')
+        {
+            if(target !=undefined)
+            {
+                if(target.type == 0)
+                {
+                    target.actor.playerStats.takeDamage(connection, 10);
+                }
+                else 
+                {
+                    
+                    target.actor.ai.takeDamage(lobby, 10);
+                }
+            }
+        }
+    }
 
     updateAIPosition(connection = Connection, data)
     {
@@ -259,6 +290,20 @@ module.exports = class GameLobby extends LobbyBase{
     spawnAllNPCs(connection = Connection)
     {
         this.NpcManager.spawnAllEnemies(connection);
+    }
+
+    findTarget(data){
+        let playerConnection = this.connections.find(x => x.player.id === data.targetId)
+        let enemy = this.NpcManager.npcs.find(x => x.id === data.targetId);
+        if(playerConnection != undefined)
+            return {type:0, actor: playerConnection.player};
+        else if(enemy != undefined)
+            return {type:1, actor: enemy};
+        else
+        {
+            console.log('target is neither enemy or a player')
+            return undefined
+        }
     }
 
     makeNewConnectionHost(connection = Connection)

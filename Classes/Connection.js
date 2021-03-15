@@ -178,8 +178,11 @@ module.exports = class Connection{
 
         });
 
-        socket.on('updateInventory', function(){
+        socket.on('updatePlayer', function(){
             player.playerInfo.updateInventory(connection);
+            player.playerStats.updateStaticStats(connection);
+            player.playerStats.updateDynamicStats(connection);
+            
            
         });
 
@@ -197,6 +200,10 @@ module.exports = class Connection{
 
         socket.on('updateGameChat', function(data){
            connection.lobby.handGameChatMessaging(connection, data);
+        });
+
+        socket.on('TriggerCollider', function(data){
+            connection.lobby.handleTriggerCollider(connection, data);
         });
 //----------------------------------NPC -----------------------------------
         socket.on('updateAIPosition', function(data){

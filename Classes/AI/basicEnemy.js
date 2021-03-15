@@ -26,7 +26,7 @@ module.exports = class basicEnemy extends BaseAI
     }
 
 
-    takeDamage(connection, _damage)
+    takeDamage(lobby, _damage)
     {
         let temp = new Number(0);
         temp = this.currentHealth -  _damage; 
@@ -39,6 +39,23 @@ module.exports = class basicEnemy extends BaseAI
         {
             this.currentHealth = 0;
         }
+ 
+        this.updateEnemyStats(lobby);
+    }
+
+    updateEnemyStats(lobby)
+    {
+        let connections = lobby.connections;
+
+        let sendData = {
+            id: this.id,
+            maxHealth: this.maxHealth,
+            health: this.currentHealth
+        }
+
+        connections.forEach(c =>{
+            c.socket.emit('updateEnemyStats', sendData)
+        })
     }
 
 }

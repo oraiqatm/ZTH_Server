@@ -23,8 +23,9 @@ module.exports = class Stats
         this.stamina = data.stamina;
     }
 
-    takeDamage(connection = Connection, _damage)
+    takeDamage( connection =Connection,_damage)
     {
+       
         let  temp = this.currentHealth - _damage;
         if(this.currentHealth > _damage)
         {
@@ -34,15 +35,15 @@ module.exports = class Stats
         {
             this.currentHealth = 0;
         }
-
+        this.updateDynamicStats(connection)
     }
 
-    updateDynamicStats(connection = Connection, playerId)
+    updateDynamicStats(connection = Connection)
     {
+        let playerId = connection.player.id;
         let sendData=
         {
             id : playerId,
-            object: "player",
             currentHealth : this.currentHealth,
             stamina: this.stamina
         }
@@ -51,12 +52,14 @@ module.exports = class Stats
         connection.socket.broadcast.to(connection.lobby.id).emit('updateDynamicStats', sendData);
     }
 
-    updateStaticStats (connection = Connection, playerId)
+    updateStaticStats (connection = Connection)
     {
+        let playerId = connection.player.id;
         let sendData = 
         {
             id: playerId,
-            attackLevel : this.attackLevel
+            maxHealth: this.maxHealth
+            
         }
 
         connection.socket.emit('updateStaticStats', sendData);
