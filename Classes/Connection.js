@@ -93,25 +93,15 @@ module.exports = class Connection{
                     console.log(results.valid + ': ' + results.reason); 
                     if(results.valid)
                     {
-                        
+
                         player.playerId = results.id;
                         player.username = results.username;
-                        server.database.getInventory(player.playerId,results =>{
-                            let temp = results.Inventory
-                            server.database.getArmor(player.playerId, out =>{
-                                let armtemp = out.Armor;
-                                server.database.getCurrency(player.playerId, o =>{
-                                    let ctemp = o.Coins;
-                                    server.database.getScene(player.playerId, sceneOut =>{
-                                        let scene = sceneOut.Scene;
-                                        player.playerInfo.generateProfile(temp, armtemp, ctemp,scene);
-                                        server.playersOnline.push({id: player.playerId, name: player.username})
-                                        socket.emit('signIn');
-                                    })
-                                });
-                                
-                            });
-                        });
+                        server.database.getPlayerData(player.playerId, d =>{
+                            player.playerInfo.generateProfile(d.Inventory, d.Armor, d.Currency,d.Loc);
+                            server.playersOnline.push({id: player.playerId, name: player.username})
+                            socket.emit('signIn');
+                        })
+                        
                         
                     
                         

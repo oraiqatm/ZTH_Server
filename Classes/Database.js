@@ -256,67 +256,47 @@ module.exports = class Database{
             connection.query(sceneQuery,[scene, 1], (error, results) => {
                 if(error) throw error             
                 callback({valid: true})
+                connection.release();
+
             });
-            connection.release();
             
         });
     }
     
 
-    getInventory(playerId, callback)
+    
+
+    getPlayerData(playerId, callback)
     {
         this.Connect(connection => {
-            var query = "SELECT InvName, InvID, InvAmnt, InvType, InvEmpty FROM player" + playerId + " WHERE ind >=1;";
-            
-            connection.query(query, (error, items) => {
+            let query = "Select * FROM player" + playerId 
+            connection.query(query,(error, data) =>
+            {
                 if(error) throw error
-                connection.release();
-                callback({Inventory:items});
+
+                let inv = []
+                let armor =[] 
+                let money = []
+                
+                for(let i= 0; i < 28; i++)
+                {
+                    inv.push({ InvName: data[i].InvName, InvID: data[i].InvID ,InvAmnt: data[i].InvAmnt, InvType: data[i].InvType, InvEmpty: data[i].InvEmpty})
+                }
+                for(let i= 0; i < 13; i++)
+                {
+                    armor.push({ArmorName: data[i].ArmorName, ArmorID: data[i].ArmorID ,ArmorAmnt: data[i].ArmorAmnt, ArmorType: data[i].ArmorType, ArmorEmpty: data[i].ArmorEmpty})
+                }
+                //Get the only row of currency need to change for more types of currency
+                money.push({Currency: data[0].Currency})
+                //Get Scene data
+                let scene = {
+                    Scene: data[0].Scene
+                }
+                callback({Inventory: inv, Armor: armor, Currency:money, Loc:scene})
+                connection.release()
 
             });
         });
     }
-
-    getArmor(playerId, callback)
-    {
-        this.Connect(connection => {
-            var query = "SELECT ArmorName, ArmorID, ArmorAmnt, ArmorType, ArmorEmpty FROM player" + playerId + " WHERE ind >=1 AND ind <=13";
-            
-            connection.query(query, (error, items) => {
-                if(error) throw error
-                connection.release();
-                callback({Armor:items});
-
-            });
-        });
-    }
-
-    getCurrency(playerId, callback)
-    {
-        this.Connect(connection => {
-            var query = "Select Currency FROM player" + playerId + " WHERE ind=1;";
-            
-            connection.query(query, (error, items) => {
-                if(error) throw error
-                connection.release();
-                callback({Coins:items});
-
-            });
-        });
-    }
-
-    getScene(playerId, callback)
-    {
-        this.Connect(connection =>{
-            let query = "Select Scene FROM player" + playerId + " WHERE ind= 1";
-            connection.query(query, (error, items) => {
-                if(error) throw error
-                connection.release();
-                callback({Scene:items});
-
-            });
-        });
-    }
-
 
 }
