@@ -162,6 +162,7 @@ module.exports = class GameLobby extends LobbyBase{
             if(target !=undefined){
                 if(target.type == 0) //if target is the connection player only
                 {  
+                    let targetId = connection.player.id;
                     target.actor.playerStats.takeDamage(connection, damage, targetId);
                 }
             }

@@ -105,10 +105,11 @@ module.exports = class Connection{
                         });
                     });
                     
-                   
+                
                     
                 }
             });
+        
         });
 
         socket.on('joinGame', function(){
