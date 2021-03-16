@@ -170,8 +170,9 @@ module.exports = class GameLobby extends LobbyBase{
         {
             if(target !=undefined)
             {
-                if(target.type == 0) //target can be any player in the lobby
+                if(target.type == 0 && this.pvp) //target can be any player in the lobby
                 {
+                    console.log(target.actor.id)
                     let targetId = target.actor.id;
                     target.actor.playerStats.takeDamage(connection, 10, targetId);
                 }
@@ -301,7 +302,6 @@ module.exports = class GameLobby extends LobbyBase{
             return {type:1, actor: enemy};
         else
         {
-            console.log('target is neither enemy or a player')
             return undefined
         }
     }
