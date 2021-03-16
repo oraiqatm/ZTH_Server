@@ -13,7 +13,7 @@ module.exports = class Server{
         this.connections = [];
         this.lobbys = [];
         this.tempdata = [];
-        this.playersLoggedIn = [];
+        this.playersOnline = [];
 
         this.lobbys[0] = new LobbyBase(0);
 

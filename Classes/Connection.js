@@ -19,16 +19,20 @@ module.exports = class Connection{
             let playerInv = player.playerInfo.inventorySlot;
             let playerArmor = player.playerInfo.armorSlot;
             let playerScene = player.playerInfo.currentScene;
-            
+            let playerFound = server.playersOnline.find(x=> x.id === player.playerId)
             if(player.playerId != -1)
             {
                 server.database.updatePlayerDB(player.playerId, player.playerInfo.coins,playerInv, playerArmor, playerScene, results =>{
                     if(results.valid)
                     {
+                        
                         if(player.hostingEnemy)
                         {
                             connection.lobby.makeNewConnectionHost(connection, player.enemyHosted);  
                         }
+                        if(playerFound != undefined)
+                            server.playersOnline.splice(player.playerId,1);
+                        console.log(server.playersOnline)
                         server.onDisconnected(connection);
                     }
                     
@@ -39,6 +43,8 @@ module.exports = class Connection{
                 {
                     connection.lobby.makeNewConnectionHost(connection);  
                 }
+                if(playerFound != undefined)
+                            server.playersOnline.splice(player.playerId,1);
                 server.onDisconnected(connection);
             }//updated the players database for storage
             
@@ -78,37 +84,45 @@ module.exports = class Connection{
         });
 
         socket.on('signIn', function(data){
-            server.database.SignIn(data.username, data.password, results =>{
-              
-                //Results will return a true or false based on if account already exists or not
-                console.log(results.valid + ': ' + results.reason); 
-                if(results.valid)
-                {
-                    
-                    player.playerId = results.id;
-                    player.username = results.username;
-                    server.database.getInventory(player.playerId,results =>{
-                        let temp = results.Inventory
-                        server.database.getArmor(player.playerId, out =>{
-                            let armtemp = out.Armor;
-                            server.database.getCurrency(player.playerId, o =>{
-                                let ctemp = o.Coins;
-                                server.database.getScene(player.playerId, sceneOut =>{
-                                    let scene = sceneOut.Scene;
-                                    player.playerInfo.generateProfile(temp, armtemp, ctemp,scene);
-                                    socket.emit('signIn');
-                                })
-                                
 
+            let playerFound = server.playersOnline.find(x => x.name === data.username)
+            if(playerFound == undefined)
+            {
+                server.database.SignIn(data.username, data.password, results =>{
+                    //Results will return a true or false based on if account already exists or not
+                    console.log(results.valid + ': ' + results.reason); 
+                    if(results.valid)
+                    {
+                        
+                        player.playerId = results.id;
+                        player.username = results.username;
+                        server.database.getInventory(player.playerId,results =>{
+                            let temp = results.Inventory
+                            server.database.getArmor(player.playerId, out =>{
+                                let armtemp = out.Armor;
+                                server.database.getCurrency(player.playerId, o =>{
+                                    let ctemp = o.Coins;
+                                    server.database.getScene(player.playerId, sceneOut =>{
+                                        let scene = sceneOut.Scene;
+                                        player.playerInfo.generateProfile(temp, armtemp, ctemp,scene);
+                                        server.playersOnline.push({id: player.playerId, name: player.username})
+                                        socket.emit('signIn');
+                                    })
+                                });
+                                
                             });
-                            
                         });
-                    });
+                        
                     
-                
-                    
-                }
-            });
+                        
+                    }
+                });
+            }
+            else
+            {
+                console.log("Player is already signed in.")
+            }
+            
         
         });
 
