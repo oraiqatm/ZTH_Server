@@ -37,7 +37,7 @@ module.exports = class basicEnemy extends BaseAI
         }
         else 
         {
-            this.currentHealth = 0;
+            this.currentHealth = 100;
         }
  
         this.updateEnemyStats(lobby);
