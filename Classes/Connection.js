@@ -19,20 +19,23 @@ module.exports = class Connection{
             let playerInv = player.playerInfo.inventorySlot;
             let playerArmor = player.playerInfo.armorSlot;
             let playerScene = player.playerInfo.currentScene;
+            
             let playerFound = server.playersOnline.find(x=> x.id === player.playerId)
+            let index = server.playersOnline.indexOf(playerFound);
+           
             if(player.playerId != -1)
             {
                 server.database.updatePlayerDB(player.playerId, player.playerInfo.coins,playerInv, playerArmor, playerScene, results =>{
                     if(results.valid)
                     {
+                       
                         
                         if(player.hostingEnemy)
                         {
                             connection.lobby.makeNewConnectionHost(connection, player.enemyHosted);  
                         }
                         if(playerFound != undefined)
-                            server.playersOnline.splice(player.playerId,1);
-                        console.log(server.playersOnline)
+                            server.playersOnline.splice(index,1);
                         server.onDisconnected(connection);
                     }
                     
@@ -44,7 +47,7 @@ module.exports = class Connection{
                     connection.lobby.makeNewConnectionHost(connection);  
                 }
                 if(playerFound != undefined)
-                            server.playersOnline.splice(player.playerId,1);
+                            server.playersOnline.splice(index,1);
                 server.onDisconnected(connection);
             }//updated the players database for storage
             
@@ -97,20 +100,25 @@ module.exports = class Connection{
                         player.playerId = results.id;
                         player.username = results.username;
                         server.database.getPlayerData(player.playerId, d =>{
-                            player.playerInfo.generateProfile(d.Inventory, d.Armor, d.Currency,d.Loc);
+                            console.log(d.Loc);
+                            player.playerInfo.generateProfile(d.Inventory, d.Armor, d.Currency, d.Loc.Scene);
+                            
                             server.playersOnline.push({id: player.playerId, name: player.username})
                             socket.emit('signIn');
-                        })
-                        
-                        
-                    
-                        
+                        }) 
                     }
+                    else
+                    {
+                        //failed to sign in re enable the sign in button
+                        socket.emit('retryLogin');
+                    }
+
                 });
             }
             else
             {
                 console.log("Player is already signed in.")
+                socket.emit('retryLogin');
             }
             
         
@@ -204,7 +212,9 @@ module.exports = class Connection{
         });
 
         socket.on('updateGameChat', function(data){
-           connection.lobby.handGameChatMessaging(connection, data);
+           //connection.lobby.handGameChatMessaging(connection, data);
+           console.log('message recived on connection')
+           server.onHandleGameChat(data, player.username);
         });
 
         socket.on('TriggerCollider', function(data){

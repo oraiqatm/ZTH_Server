@@ -1,7 +1,7 @@
 {   
     "Coins":1000,
     "createQuery": " (ind INT AUTO_INCREMENT PRIMARY KEY, InvName VARCHAR(20), InvID INT(5), InvAmnt INT(9), InvType VARCHAR(20), InvEmpty Bool, ArmorName VARCHAR(20), ArmorID INT(5), ArmorAmnt INT(9), ArmorType VARCHAR(20), ArmorEmpty Bool, Currency INT(20), Scene VARCHAR(20))",
-    "Scene": "Start",
+    "Scene": "Level",
     "Inventory": [
         {"name": "empty", "id": 0, "amount": 1, "type":"empty","isEmpty": true},
         {"name": "empty", "id": 0, "amount": 1, "type":"empty","isEmpty": true},

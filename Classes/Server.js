@@ -12,14 +12,11 @@ module.exports = class Server{
         this.database = new Database(true); //episode 19
         this.connections = [];
         this.lobbys = [];
-        this.tempdata = [];
         this.playersOnline = [];
 
         this.lobbys[0] = new LobbyBase(0);
 
-        this.database.GetRespawnItems(result => {  // Getting respawnable items from DB
-            this.tempdata = result; 
-        })
+        
     }
 
     onUpdate(){
@@ -76,6 +73,7 @@ module.exports = class Server{
 
         let server = this;
         let lobbyFound = false;
+        let playerScene = connection.player.playerInfo.currentScene;
 
         let gameLobbies = server.lobbys.filter(item => {
             return item instanceof GameLobby;
@@ -98,19 +96,37 @@ module.exports = class Server{
         //All game lobbies full or we have never created one
         if(!lobbyFound){
             console.log('Making a new game lobby');
-            let gamelobby = new GameLobby(gameLobbies.length + 1, new GameLobbySettings('FFA', 50), server.tempdata);
+            let gamelobby = new GameLobby(gameLobbies.length + 1, new GameLobbySettings(playerScene, 50));
             server.lobbys.push(gamelobby);
             server.onSwitchLobby(connection, gamelobby.id);
         }
     }
-        onSwitchLobby(connection = Connection, lobbyID){
-            let server = this;
-            let lobbys = server.lobbys;
+    onSwitchLobby(connection = Connection, lobbyID){
+        let server = this;
+        let lobbys = server.lobbys;
     
-            connection.socket.join(lobbyID); //Join the new lobby's socket channel
-            connection.lobby = lobbys[lobbyID]; //assign reference to the new lobby
+        connection.socket.join(lobbyID); //Join the new lobby's socket channel
+        connection.lobby = lobbys[lobbyID]; //assign reference to the new lobby
     
-            lobbys[connection.player.lobby].onLeaveLobby(connection);
-            lobbys[lobbyID].onEnterLobby(connection);
+        lobbys[connection.player.lobby].onLeaveLobby(connection);
+        lobbys[lobbyID].onEnterLobby(connection);
+    }
+
+    onHandleGameChat(data, username)
+    {
+        let server = this;
+        console.log('message recieved on server')
+        let sendData = {
+            username: username, 
+            message: data.message,
+            type: data.type
         }
+        for(let id in server.lobbys){
+            server.lobbys[id].connections.forEach(c =>{
+                c.socket.emit('updateGameChat', sendData);
+            });
+        }
+        
+    }
+
 }

@@ -10,13 +10,13 @@ const NPC_Manager = require('../AI/NPC_Manager');
 
 
 module.exports = class GameLobby extends LobbyBase{
-    constructor(id, settings = GameLobbySettings, items){
+    constructor(id, settings = GameLobbySettings){
         super(id);
         this.settings = settings;
 
         //Server Spawning items when logging in.
         this.Objects = new LobbyObjects();
-        this.Objects.ServerRespawnObjects = this.convertSO(items);
+        this.Objects.ServerRespawnObjects = this.convertSO(settings.sceneData.Objects);
 
         this.NpcManager = new NPC_Manager();
         this.NpcManager.initializeEnemies('MonsterCube',2);
@@ -43,6 +43,8 @@ module.exports = class GameLobby extends LobbyBase{
             console.log("Current player Count" + currentPlayerCount);
             return false;
         }
+        if(connection.player.playerInfo.currentScene != this.settings.gameMode)
+            return false;
 
         return true;
     }
@@ -57,7 +59,10 @@ module.exports = class GameLobby extends LobbyBase{
         //spawn AI
         
         lobby.addPlayer(connection);
-        socket.emit('loadGame');
+        let sendData = {
+            Scene: connection.player.playerInfo.currentScene
+        }
+        socket.emit('loadGame', sendData);
 
         
       
@@ -173,7 +178,7 @@ module.exports = class GameLobby extends LobbyBase{
             {
                 if(target.type == 0 && this.pvp) //target can be any player in the lobby
                 {
-                    console.log(target.actor.id)
+                    //console.log(target.actor.id)
                     let targetId = target.actor.id;
                     target.actor.playerStats.takeDamage(connection, 10, targetId);
                 }
