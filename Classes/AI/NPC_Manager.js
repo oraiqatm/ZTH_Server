@@ -17,8 +17,8 @@ module.exports = class NPC_Manager {
         {
             let newCube = new basicEnemy();
             newCube.name = nameofNPC;
-            newCube.maxHealth = 100; 
-            newCube.Health = 100;
+            newCube.maxHealth = 10000; 
+            newCube.Health = 10000;
             newCube.dead = false;
             newCube.target = 'empty';
             let arrId = newCube.id;
