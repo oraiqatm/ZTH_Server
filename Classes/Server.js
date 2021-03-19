@@ -8,8 +8,8 @@ let GameLobby = require('./Lobbies/GameLobby');
 let GameLobbySettings = require('./Lobbies/GameLobbySettings');
 
 module.exports = class Server{
-    constructor(){
-        this.database = new Database(true); //episode 19
+    constructor(onlineServer = Boolean){
+        this.database = new Database(onlineServer); //episode 19
         this.connections = [];
         this.lobbys = [];
         this.playersOnline = [];

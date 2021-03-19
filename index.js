@@ -7,7 +7,14 @@ console.log('Server has started');
 
 let Server = require('./Classes/Server');
 
-let server = new Server();
+let userOnlineDB = false;
+if(process.env.PORT != undefined)
+{
+    userOnlineDB = true;
+    console.log('Using clearDB on server');
+}
+
+let server = new Server(userOnlineDB); 
 
 setInterval(()=>{
     server.onUpdate();

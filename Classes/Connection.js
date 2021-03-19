@@ -30,10 +30,7 @@ module.exports = class Connection{
                     {
                        
                         
-                        if(player.hostingEnemy)
-                        {
-                            connection.lobby.makeNewConnectionHost(connection, player.enemyHosted);  
-                        }
+                        
                         if(playerFound != undefined)
                             server.playersOnline.splice(index,1);
                         server.onDisconnected(connection);
@@ -232,6 +229,14 @@ module.exports = class Connection{
         socket.on('updateEnemyStats', function(data)
         {
             connection.lobby.NpcManager.updateEnemyStats(connection,data);
+        });
+
+        socket.on('changeEnemyHost', function(data){   
+            if(player.hostingEnemy)
+            {
+                connection.lobby.makeNewConnectionHost(connection, player.enemyHosted);  
+                console.log("closed before quitted");
+            }
         });
     }
 }
