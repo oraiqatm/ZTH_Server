@@ -1,29 +1,33 @@
 const Connection = require("../Connection");
 const basicEnemy = require("./basicEnemy");
 module.exports = class NPC_Manager {
-    constructor(){
+    constructor(enemyList = Array){
         this.npcs = []; 
         this.enemiesToRespawn = [];
         this.runOnce = true;
         this.enemiesReady = false;
+        this.initializeNpcs(enemyList);
     }
 
 
-    initializeEnemies(nameofNPC,amnt)
+    initializeNpcs(enemyList)
     {
-        //these monster will never be removed from enemies once init
-        //will run when gamelobby is created
-        for(let i=0; i < amnt; i++)
-        {
-            let newCube = new basicEnemy();
-            newCube.name = nameofNPC;
-            newCube.maxHealth = 100; 
-            newCube.Health = 100;
-            newCube.dead = false;
-            newCube.target = 'empty';
-            let arrId = newCube.id;
-            this.npcs.push({id:arrId, ai:newCube});
-        }
+        //Spawning enemies
+        enemyList.forEach(enemy =>{
+            for(let i=0; i < enemy.spawnAmount; i++)
+            {
+                let newCube = new basicEnemy();
+                newCube.name = enemy.name;
+                newCube.maxHealth = 100; 
+                newCube.Health = 100;
+                newCube.dead = false;
+                newCube.target = 'empty';
+                let arrId = newCube.id;
+                this.npcs.push({id:arrId, ai:newCube});
+            }
+        });
+        
+        
 
         
     }

@@ -17,9 +17,8 @@ module.exports = class GameLobby extends LobbyBase{
         //Server Spawning items when logging in.
         this.Objects = new LobbyObjects();
         this.Objects.ServerRespawnObjects = this.convertSO(settings.sceneData.Objects);
-
-        this.NpcManager = new NPC_Manager();
-        this.NpcManager.initializeEnemies('MonsterCube',2);
+        this.NpcManager = new NPC_Manager(settings.sceneData.Enemies);
+        
         
         this.runOnce = true;
         this.pvp = true;
@@ -58,12 +57,12 @@ module.exports = class GameLobby extends LobbyBase{
         this.Intialize(connection);
         //spawn AI
         
-        lobby.addPlayer(connection);
         let sendData = {
             Scene: connection.player.playerInfo.currentScene
         }
         socket.emit('loadGame', sendData);
 
+        lobby.addPlayer(connection);
         
       
     }
