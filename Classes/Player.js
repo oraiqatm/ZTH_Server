@@ -14,7 +14,7 @@ module.exports = class Player{
         this.position = new Vector3();
         this.modelRotation = new Number(0);
 
-        this.playerInfo = new PlayerInfo(); //INVENTORY
+        this.playerInfo = new PlayerInfo(this.id); //INVENTORY
         this.playerStats = new Stats(); //PLAYER STATS
        
 

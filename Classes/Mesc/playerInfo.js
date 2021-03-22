@@ -6,8 +6,9 @@ let fs = require('fs');
 
 
 module.exports = class playerInfo{ //INVENTORY 
-    constructor()
+    constructor(id)
     {
+        this.playerId = id;
         this.coins = new Number(0);
         this.inventorySlot = [];
         this.armorSlot =[];
@@ -30,6 +31,13 @@ module.exports = class playerInfo{ //INVENTORY
         }
        
         socket.emit('updateInventory', sendData);
+
+        let sendArmor = {
+            id: this.playerId,
+            Armor: this.armorSlot
+        }
+
+        socket.broadcast.to(connection.lobby.id).emit('equipOnOtherClients', sendArmor);
     }
     
 
@@ -263,13 +271,6 @@ module.exports = class playerInfo{ //INVENTORY
         }
     }
 
-    sendMessage(note,connection = Connection)
-    {
-        let socket = connection.socket;
-        let sendData = {
-            message: note
-        }
-        socket.emit('communication', sendData);
-    }
+    
 
 };
