@@ -105,53 +105,93 @@ module.exports = class playerInfo{ //INVENTORY
 
     equipItem(data, connection = Connection)
     {
+       
         //hard code the slots
         if(data.type == "double")
         {
-            if (this.armorSlot[8].isEmpty)
-            {   
-                if(!this.armorSlot[9].isEmpty)
-                {
-                    let temp = new invSlot();
-                    temp.makeCopy( this.armorSlot[9]);
-                    this.armorSlot[9].makeEmpty();
-                    this.armorSlot[8].makeCopy(this.inventorySlot[data.index]);
-                    this.inventorySlot[data.index].makeCopy(temp);
-                }
-                else{
-                    this.armorSlot[8].makeCopy(this.inventorySlot[data.index])
-                    this.inventorySlot[data.index].makeEmpty();
-                }
-                
-            }
-            else if(!this.armorSlot[8].isEmpty && this.armorSlot[9].isEmpty)
+            if(data.slotNumber == 8)
             {
-                let temp = new invSlot();
-                temp.makeCopy(this.inventorySlot[data.index]);
-                this.inventorySlot[data.index].makeCopy(this.armorSlot[8]);
-                this.armorSlot[8].makeCopy(temp);
-            } 
-            else if(!this.armorSlot[8].isEmpty && !this.armorSlot[9].isEmpty)
-            {
-                
-                if(!this.checkInvFull(1))
-                {
+                if (this.armorSlot[8].isEmpty) //check right hand is empty
+                {   
+                    if(!this.armorSlot[9].isEmpty) //check if left hand full make empty
+                    {
+                        let temp = new invSlot();
+                        temp.makeCopy( this.armorSlot[9]);
+                        this.armorSlot[9].makeEmpty();
+                        this.armorSlot[8].makeCopy(this.inventorySlot[data.index]);
+                        this.inventorySlot[data.index].makeCopy(temp);
+                    }
+                    else{ //both left and right are empty
+                        this.armorSlot[8].makeCopy(this.inventorySlot[data.index])
+                        this.inventorySlot[data.index].makeEmpty();
+                    }
+                    
+                }
+                else if(!this.armorSlot[8].isEmpty && this.armorSlot[9].isEmpty) //right hand full and left hand empty
+                {//then empty right hand and equip new weapon
                     let temp = new invSlot();
                     temp.makeCopy(this.inventorySlot[data.index]);
                     this.inventorySlot[data.index].makeCopy(this.armorSlot[8]);
                     this.armorSlot[8].makeCopy(temp);
-
-                    let freeSpot = this.findEmptySlot();
-                    this.inventorySlot[freeSpot].makeCopy(this.armorSlot[9]);
-                    this.armorSlot[9].makeEmpty()
+                } 
+                else if(!this.armorSlot[8].isEmpty && !this.armorSlot[9].isEmpty) //if both are full then unequip 
+                {//unequip both and equip right hand weapon
+                    
+                    if(!this.checkInvFull(1))
+                    {
+                        let temp = new invSlot();
+                        temp.makeCopy(this.inventorySlot[data.index]);
+                        this.inventorySlot[data.index].makeCopy(this.armorSlot[8]);
+                        this.armorSlot[8].makeCopy(temp);
+    
+                        let freeSpot = this.findEmptySlot();
+                        this.inventorySlot[freeSpot].makeCopy(this.armorSlot[9]);
+                        this.armorSlot[9].makeEmpty()
+                    }
                 }
             }
+            else { // slotNumber == 9
+                if(this.armorSlot[9].isEmpty)
+                {
+                    if(!this.armorSlot[8].isEmpty)
+                    {
+                        let temp = new invSlot();
+                        temp.makeCopy(this.armorSlot[8]);
+                        this.armorSlot[8].makeEmpty();
+                        this.armorSlot[9].makeCopy(this.inventorySlot[data.index]);
+                        this.inventorySlot[data.index].makeCopy(temp);
+                    }
+                    else{ //both left and right are empty
+                        this.armorSlot[9].makeCopy(this.inventorySlot[data.index])
+                        this.inventorySlot[data.index].makeEmpty();
+                    }
+                } else if(!this.armorSlot[9].isEmpty && this.armorSlot[8].isEmpty)
+                {
+                    let temp = new invSlot();
+                    temp.makeCopy(this.inventorySlot[data.index]);
+                    this.inventorySlot[data.index].makeCopy(this.armorSlot[9]);
+                    this.armorSlot[9].makeCopy(temp);
+                } else if(!this.armorSlot[9].isEmpty && !this.armorSlot[8].isEmpty)
+                {
+                    if(!this.checkInvFull(1))
+                    {
+                        let temp = new invSlot();
+                        temp.makeCopy(this.inventorySlot[data.index]);
+                        this.inventorySlot[data.index].makeCopy(this.armorSlot[9]);
+                        this.armorSlot[9].makeCopy(temp);
+    
+                        let freeSpot = this.findEmptySlot();
+                        this.inventorySlot[freeSpot].makeCopy(this.armorSlot[8]);
+                        this.armorSlot[8].makeEmpty()
+                    }
+                }
+            }   
             
         }
 
         else if(data.type == "single")
         {
-            if(data.slotNumber == 9 && this.armorSlot[8].type == "double")
+            if(data.slotNumber == 9 && this.armorSlot[8].type == "double") //try to eqiup a shield
             {
                 let temp = new invSlot();
                 temp.makeCopy(this.inventorySlot[data.index]);
@@ -159,6 +199,13 @@ module.exports = class playerInfo{ //INVENTORY
                 this.armorSlot[8].makeEmpty();
                 this.armorSlot[9].makeCopy(temp);
  
+            } else if (data.slotNumber == 8 && this.armorSlot[9].type == "double") //try to equip a sword
+            {
+                let temp = new invSlot();
+                temp.makeCopy(this.inventorySlot[data.index]);
+                this.inventorySlot[data.index].makeCopy(this.armorSlot[9]);
+                this.armorSlot[9].makeEmpty();
+                this.armorSlot[8].makeCopy(temp);
             }
             else
             {
@@ -181,7 +228,7 @@ module.exports = class playerInfo{ //INVENTORY
         }
         
         
-        //console.log(data.type, this.armorSlot[8].type, data.slotNumber);   
+        //console.log(this.armorSlot[9]);   
         
         this.updateInventory(connection);
         

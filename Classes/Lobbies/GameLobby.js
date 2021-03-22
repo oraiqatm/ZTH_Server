@@ -317,32 +317,36 @@ module.exports = class GameLobby extends LobbyBase{
         let lobby = this;
         let connections = lobby.connections;
         let enemiesID = connection.player.enemysHosted;
-    
-        for(let i=0; i < connections.length; i++)
+        if(connections.length >1)
         {
-            if(connection.player.id != connections[i].player.id)
+            for(let i=0; i < connections.length; i++)
             {
-                
-                connections[i].player.hostingEnemy = true;
-                connections[i].enemysHosted = enemiesID;
-                
-                console.log("Player" + connections[i].player.id + " is hosting enemies");
-                enemiesID.forEach(enemyid =>{
-                    let sendData = {
-                        id: enemyid
-                    }
-
-                    connections[i].socket.emit('updateEnemyHost', sendData);
-                    console.log("updated host enemy" + sendData);
-                });
-                console.log("Connections in lobby: ");
-                connections.forEach(c=>{
-                    console.log(c.player.id);
-                })
-                return;
-
+                if(connection.player.id != connections[i].player.id)
+                {
+                    
+                    connections[i].player.hostingEnemy = true;
+                    connections[i].enemysHosted = enemiesID;
+                    
+                    console.log("Player" + connections[i].player.id + " is hosting enemies");
+                    enemiesID.forEach(enemyid =>{
+                        let sendData = {
+                            id: enemyid
+                        }
+    
+                        connections[i].socket.emit('updateEnemyHost', sendData);
+                        console.log("updated host enemy" + sendData);
+                    });
+                    console.log("Connections in lobby: ");
+                    connections.forEach(c=>{
+                        console.log(c.player.id);
+                    })
+                    return;
+    
+                }
             }
         }
+        else {console.log('no other connections'); return;}
+        
 
     }
 
