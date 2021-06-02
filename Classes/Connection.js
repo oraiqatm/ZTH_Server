@@ -125,8 +125,8 @@ module.exports = class Connection{
             server.onAttemptToJoinGame(connection);
         });
 
-        socket.on('spawnNPCS', function(){ //Sent from client
-            
+        socket.on('spawnActors', function(){ //Sent from client
+            connection.lobby.addPlayer(connection);
             connection.lobby.spawnAllNPCs(connection);
         })
 
@@ -195,6 +195,10 @@ module.exports = class Connection{
             
            
         });
+
+        socket.on('addToInventory', function(data){
+            player.playerInfo.addToInventory(data, connection);
+        })
 
         socket.on('equipItem', function(data){
             player.playerInfo.equipItem(data, connection);

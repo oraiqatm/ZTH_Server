@@ -62,7 +62,7 @@ module.exports = class GameLobby extends LobbyBase{
         }
         socket.emit('loadGame', sendData);
 
-        lobby.addPlayer(connection);
+        //lobby.addPlayer(connection);
         
       
     }

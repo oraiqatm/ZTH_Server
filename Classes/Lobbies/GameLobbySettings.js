@@ -24,7 +24,7 @@ module.exports = class GameLobbySettings {
 
                 break;
 
-            case 'Start':
+            case 'Kingdom':
                  enemyList = [];
                  respawnables = [ ]
                 return {Enemies: enemyList, Objects: respawnables}
