@@ -18,6 +18,8 @@ module.exports = class GameLobby extends LobbyBase{
         this.Objects = new LobbyObjects();
         this.Objects.ServerRespawnObjects = this.convertSO(settings.sceneData.Objects);
         this.NpcManager = new NPC_Manager(settings.sceneData.Enemies);
+
+        this.Projectiles= [] //array of prectiles class
         
         
         this.runOnce = true;
@@ -188,6 +190,8 @@ module.exports = class GameLobby extends LobbyBase{
             }
         }
     }
+
+    
 
     updateAIPosition(connection = Connection, data)
     {

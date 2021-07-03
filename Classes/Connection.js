@@ -58,7 +58,7 @@ module.exports = class Connection{
                 console.log(result.valid + ': ' + result.reason + " id:" + result.id);
                 //Creating the save json file on server
                 if(result.valid){
-                    let template = './Classes/PlayerStorage/template.json';
+                    let template = './Classes/json/template.json';
                     var m = JSON.parse(fs.readFileSync(template).toString());
                     var createTableQuery = "CREATE TABLE player" + result.id + m.createQuery;
                     
@@ -133,7 +133,7 @@ module.exports = class Connection{
         socket.on('updatePosition', function(data){
             
             let sendData = {
-                id: player.id,
+                id: data.id,
                 position:{
                     x: data.position.x,
                     y: data.position.y,
@@ -148,7 +148,7 @@ module.exports = class Connection{
         socket.on('updateRotation', function(data){
             
             let sendData = {
-                id: player.id,
+                id: data.id,
                 modelRotation: data.modelRotation
             }
                 
@@ -171,13 +171,13 @@ module.exports = class Connection{
                 horizontalX: data.horizontalX,
                 attackAction: data.attackAction,
                 handAttackTrig: data.HandAttackTrig,
-                legAttackTrig: data.LegAttackTrig
-
+                legAttackTrig: data.LegAttackTrig,
+                isAiming: data.isAiming
             }
                // console.log(data.LegAttackTrig);
                          
                 socket.broadcast.to(connection.lobby.id).emit('updateAnimation', sendData);
-            
+                
             
         });
 
@@ -221,6 +221,36 @@ module.exports = class Connection{
         socket.on('TriggerCollider', function(data){
             connection.lobby.handleTriggerCollider(connection, data);
         });
+
+        socket.on('SpawnProjectile', function(data){
+           
+            player.spawnProjectilesToClients(connection, data);
+        });
+        socket.on('updateProjectileDirection', function(data){
+            
+            let sendData = {
+                id: data.id,
+                direction:{
+                    x: data.position.x,
+                    y: data.position.y,
+                    z: data.position.z,
+                }
+            }
+                
+                
+            socket.broadcast.to(connection.lobby.id).emit('updateRotation', sendData);
+            
+            
+        });
+
+        socket.on('UnspawnProjectile', function(data){
+            let sendData = {
+                id: data.id
+            }
+            socket.broadcast.to(connection.lobby.id).emit('serverUnSpawnObject', sendData);
+        });
+
+        
 //----------------------------------NPC -----------------------------------
         socket.on('updateAIPosition', function(data){
             connection.lobby.updateAIPosition(connection, data);

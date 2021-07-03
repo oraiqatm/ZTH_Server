@@ -234,6 +234,15 @@ module.exports = class playerInfo{ //INVENTORY
             }
 
         }
+        else if (data.type == 'Ammo')
+        {
+            if(this.armorSlot[10].isEmpty)
+            {
+                this.armorSlot[10].makeCopy(this.inventorySlot[data.index])
+                this.inventorySlot[data.index].makeEmpty();
+            
+            }
+        }
         
         
         //console.log(this.armorSlot[9]);   
@@ -249,7 +258,7 @@ module.exports = class playerInfo{ //INVENTORY
         {
             console.log("inventory not full");
 
-            if(data.type == 'double' || data.type == 'single')
+            if(data.type == 'double' || data.type == 'single' || data.type == 'Ammo')
             {
                 console.log("type is valid");
 
